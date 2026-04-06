@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Register | NeuroLearn</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:'Lexend',sans-serif;
+
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:linear-gradient(135deg,#ffd6e8,#cde7ff,#e0ccff);
+
+}
+
+/* register card */
+
+.register-box{
+
+background:white;
+
+padding:40px;
+
+border-radius:20px;
+
+width:380px;
+
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+
+text-align:center;
+
+}
+
+.register-box h2{
+
+color:#6a5acd;
+margin-bottom:20px;
+
+}
+
+/* inputs */
+
+input{
+
+width:100%;
+padding:12px;
+
+margin:10px 0;
+
+border-radius:10px;
+
+border:1px solid #ddd;
+
+font-size:14px;
+
+}
+
+/* button */
+
+button{
+
+width:100%;
+padding:12px;
+
+background:linear-gradient(90deg,#ff9acb,#7db9ff);
+
+color:white;
+
+border:none;
+
+border-radius:10px;
+
+font-size:16px;
+
+margin-top:10px;
+
+cursor:pointer;
+
+}
+
+button:hover{
+
+opacity:0.9;
+
+}
+
+p{
+
+margin-top:15px;
+
+}
+
+a{
+
+color:#7a5cff;
+
+text-decoration:none;
+
+font-weight:500;
+
+}
+
+/* responsive */
+
+@media(max-width:500px){
+
+.register-box{
+
+width:90%;
+
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="register-box">
+
+<h2>Create Account</h2>
+
+<form>
+
+<input type="text" placeholder="Full Name" required>
+
+<input type="email" placeholder="Email Address" required>
+
+<input type="password" placeholder="Password" required>
+
+<input type="password" placeholder="Confirm Password" required>
+
+<button type="submit">Register</button>
+
+</form>
+
+<p>Already have an account?</p>
+
+<a href="/login">Login Here</a>
+
+</div>
+
+</body>
+
+</html>

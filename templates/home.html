@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NeuroLearn | Home</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:'Lexend',sans-serif;
+
+background:linear-gradient(135deg,#ffd6e8,#cde7ff,#e0ccff);
+
+min-height:100vh;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px 10%;
+
+}
+
+.logo{
+
+font-size:26px;
+
+font-weight:600;
+
+color:#6a5acd;
+
+}
+
+.nav-links a{
+
+margin-left:20px;
+
+text-decoration:none;
+
+color:#6a5acd;
+
+font-weight:500;
+
+}
+
+/* HERO SECTION */
+
+.hero{
+
+text-align:center;
+
+padding:60px 20px;
+
+}
+
+.hero h1{
+
+font-size:40px;
+
+color:#6a5acd;
+
+margin-bottom:10px;
+
+}
+
+.hero p{
+
+font-size:18px;
+
+color:#555;
+
+max-width:600px;
+
+margin:auto;
+
+}
+
+/* MODES SECTION */
+
+.modes{
+
+display:flex;
+
+justify-content:center;
+
+gap:40px;
+
+flex-wrap:wrap;
+
+padding:60px 10%;
+
+}
+
+/* MODE CARD */
+
+.mode-card{
+
+background:white;
+
+width:280px;
+
+border-radius:20px;
+
+padding:20px;
+
+text-align:center;
+
+box-shadow:0 15px 30px rgba(0,0,0,0.1);
+
+transition:0.3s;
+
+}
+
+.mode-card:hover{
+
+transform:translateY(-10px);
+
+}
+
+.mode-card img{
+
+width:100%;
+
+border-radius:15px;
+
+margin-bottom:15px;
+
+}
+
+.mode-card h3{
+
+color:#6a5acd;
+
+margin-bottom:10px;
+
+}
+
+.mode-card p{
+
+color:#666;
+
+font-size:14px;
+
+}
+
+/* BUTTON */
+
+.mode-card button{
+
+margin-top:15px;
+
+padding:10px 20px;
+
+border:none;
+
+border-radius:8px;
+
+background:linear-gradient(90deg,#ff9acb,#7db9ff);
+
+color:white;
+
+cursor:pointer;
+
+}
+
+.mode-card button:hover{
+
+opacity:0.9;
+
+}
+
+/* FOOTER */
+
+footer{
+
+text-align:center;
+
+padding:20px;
+
+color:#555;
+
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.hero h1{
+
+font-size:30px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">NeuroLearn</div>
+
+<div class="nav-links">
+
+<a href="/login">Login</a>
+
+<a href="/register">Register</a>
+
+</div>
+
+</div>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>Learning Designed for Every Brain</h1>
+
+<p>
+
+Choose a learning mode that suits your brain. NeuroLearn helps neurodivergent students study comfortably and effectively.
+
+</p>
+
+</section>
+
+
+<!-- LEARNING MODES -->
+
+<section class="modes">
+
+<!-- Dyslexia -->
+
+<div class="mode-card">
+
+<img src="static\dyslexia-removebg-preview.png" alt="Dyslexia Mode">
+
+<h3>Dyslexia Mode</h3>
+
+<p>Uses dyslexia-friendly fonts and spacing to improve reading clarity.</p>
+
+<button>Start Mode</button>
+
+</div>
+
+
+<!-- ADHD -->
+
+<div class="mode-card">
+
+<img src="static\ADHD2-removebg-preview.png" alt="ADHD Mode">
+
+<h3>ADHD Mode</h3>
+
+<p>Reduces distractions and highlights important content.</p>
+
+<button>Start Mode</button>
+
+</div>
+
+
+<!-- Autism -->
+
+<div class="mode-card">
+
+<img src="static\autism-removebg-preview.png" alt="Autism Mode">
+
+<h3>Autism Mode</h3>
+
+<p>Simple layout with structured information and calm colors.</p>
+
+<button>Start Mode</button>
+
+</div>
+
+</section>
+
+
+<footer>
+
+<p>© 2026 NeuroLearn | Inclusive Learning Platform</p>
+
+</footer>
+
+
+</body>
+
+</html>
