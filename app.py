@@ -1,97 +1,91 @@
-from flask import Flask, session, flash, render_template, url_for, request, redirect
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-app=Flask(__name__)
-app.secret_key='secretkey'
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///users.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-db=SQLAlchemy(app)
+import os
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_bcrypt import Bcrypt
+from models import db, User, UserProfile, ReadingHistory
+from processing import process_dyslexia_text
+from werkzeug.security import generate_password_hash
 
-class User(db.Model):
-    id=db.Column(db.Integer,primary_key=True)
-    name=db.Column(db.String(100))
-    email=db.Column(db.String(100),unique=True)
-    password=db.Column(db.String(100))
-
-#to initialize db with app context
-with app.app_context():
-    db.create_all()
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'neuro-ai-secret-key-999'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///neuro_learn.db'
+db.init_app(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+@login_manager.user_loader
+def load_user(user_id):
+ return User.query.get(int(user_id))
+# --- ROUTES ---
 @app.route('/')
-def home():
-    
-    return render_template('home.html')
-
-
-@app.route('/register',methods=['GET','POST'])
-def register():
-    if request.method=='post':
-        name=request.form['name']
-        email=request.form['email']
-        password=request.form['password']
-        confirm_password=request.form['confirm_password']
-
-        if not name or len(name.strip())<2:
-            flash('name must be 2 characters long','error')
-            return redirect(url_for('register'))
-        if not email or '@' not in email:
-            flash('email must contain @','error')
-            return redirect(url_for('register'))
-        if not password or len(password)<8 or not any(char.isdigit() for char in password) or not any(char.isalpha() for char in password) or not any(not char.isalnum() for char in password):
-            flash('password must be 8 char long and must conatin alphabets, digits and special characters','error')
-            return redirect(url_for('register'))
-        if password != confirm_password:
-            flash('Password does not match','error')
-            return redirect(url_for('register'))
-
-         #check if user exists
-        existing_user= User.query.filter_by(email=email).first()
-        if existing_user:
-           flash('Email already registered,Please Login')
-           return redirect(url_for('login'))
-
-           new_user=User(
-             name= name,
-             email=email,
-             password=generate_password_hash(password))
-        try:
-          db.session.add(new_user)
-          db.session.commit()
-          flash('Registeration successful! Please log in.', 'success')
-        except Exception as e:
-          db.session.rollback()
-          flash('An error occurred during registration. Please try again.','error')
-          return redirect(url_for('register'))
-    
-        flash('name must be 2 characters long','error')
-    return render_template('register.html')
-
-@app.route('/login')
+def index():
+ return render_template('index.html')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method =='POST':
-        email= request.form['email']
-        password= request.form['password']
-        user=User.query.filter_by(email=email).first()
+ if request.method == 'POST':
+  user = User.query.filter_by(username=request.form.get('username')).first()
+  if user and check_password_hash(user.password_hash, request.form.get('password')):
+   login_user(user)
+   return redirect(url_for('dashboard'))
+ return render_template('login.html')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+ if request.method == 'POST':
+  hashed_pw = generate_password_hash(request.form.get('password'), method='pbkdf2:sha256')
+  new_user = User(username=request.form.get('username'), password_hash=hashed_pw)
+  db.session.add(new_user)
+  db.session.commit()
+  db.session.add(UserProfile(user_id=new_user.id))
+  db.session.commit()
+  return redirect(url_for('login'))
+ return render_template('register.html')
+@app.route('/logout')
+def logout():
+ logout_user()
+ return redirect(url_for('index'))
+@app.route('/process', methods=['POST'])
+def process():
+    data = request.get_json()
+    processed_html = process_dyslexia_text(
+        data['text'],
+        syllables=data.get('syllables'),
+        highlight_categories=data.get('highlights'),
+        normalize=data.get('normalize')
+    )
+    if current_user.is_authenticated:
+        db.session.add(ReadingHistory(user_id=current_user.id, original_text=data['text']))
+        db.session.commit()
+    return jsonify({'processed_html': processed_html})
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    p = current_user.profile
+    if request.method == 'POST':
+        p.theme = request.form.get('theme')
+        p.font_size = request.form.get('font_size')
+        p.tts_speed = float(request.form.get('tts_speed', 0.85))
+        db.session.commit()
+        return redirect(url_for('profile'))
+    return render_template('profile.html', profile=p)
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    history = ReadingHistory.query.filter_by(user_id=current_user.id).order_by(ReadingHistory.date_processed.desc()).all()
+    return render_template('dashboard.html', history=history, total_sessions=len(history))
 
-        if user and confirm_password_hash(user.password,password):
-            session['user_id']=user.id
-            session['user_name']=user.name
-            flash('login successful!','success')
-            return redirect(url_for('index'))
-        else:
-            flash('invalid email or password.', 'error')
-            return redirect(url_for('login'))
-    return render_template('login.html')
+@app.route('/about')
+def about():  # <--- This "about" is the endpoint Flask is looking for
+    return render_template('about.html')
 
-if __name__=='__main__':
-    app.run(debug=True)
-
-
-            
-
-
-
-
-
-
-    
-
+@app.route('/api/user_preferences')
+def get_prefs():
+    p = current_user.profile if current_user.is_authenticated else None
+    return jsonify({
+        'theme': p.theme if p else 'light',
+        'font_size': p.font_size if p else 'medium',
+        'tts_speed': p.tts_speed if p else 0.85
+    })
+if __name__ == '__main__':
+  with app.app_context():
+   db.create_all()
+app.run(debug=True)

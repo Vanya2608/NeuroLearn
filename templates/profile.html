@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel" style="max-width: 600px; margin: 0 auto;">
+<h1>Reader Preferences</h1>
+<form method="POST">
+<div class="form-group">
+<label>Color Theme</label>
+<select name="theme" class="panel" style="width: 100%; margin-bottom:
+15px;">
+<option value="light" {% if profile.theme == 'light' %}selected{% endif
+%}>Classic Cream</option>
+<option value="dark" {% if profile.theme == 'dark' %}selected{% endif %}>Dark
+Comfort</option>
+<option value="sepia" {% if profile.theme == 'sepia' %}selected{% endif
+%}>Sepia Paper</option>
+</select>
+</div>
+<div class="form-group">
+<label>Font Size</label>
+<select name="font_size" class="panel" style="width: 100%; margin-bottom:
+15px;">
+<option value="small" {% if profile.font_size == 'small' %}selected{% endif
+%}>Small</option>
+<option value="medium" {% if profile.font_size == 'medium' %}selected{% endif
+%}>Medium</option>
+<option value="large" {% if profile.font_size == 'large' %}selected{% endif
+%}>Large</option>
+</select>
+</div>
+<div class="form-group">
+<label>Reading Speed (AI Voice)</label>
+<input type="range" name="tts_speed" min="0.5" max="1.5" step="0.1" value="{{
+profile.tts_speed }}" style="width: 100%;">
+<div style="display: flex; justify-content: space-between; font-size:
+0.8rem;"><span>Slow</span><span>Normal</span><span>Fast</span></div>
+</div>
+<button type="submit" class="panel" style="width: 100%; background: var(--
+accent-blue); color: white; margin-top: 20px; font-weight: bold;">Save My
+Settings</button>
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel">
+<h1> Your Progress Analytics</h1>
+<div style="display: flex; gap: 20px; margin-bottom: 40px;">
+<div class="panel" style="flex: 1; text-align: center; background: rgba(74, 144, 226,
+0.1);">
+<h2 style="margin:0;">{{ total_sessions }}</h2>
+<p style="margin:5px 0 0;">Total Texts Read</p>
+</div>
+</div>
+<h3>Recent Activity</h3>
+<table style="width: 100%; border-collapse: collapse;">
+<thead><tr style="border-bottom: 2px solid rgba(0,0,0,0.1);"><th
+align="left">Date</th><th align="left">Text Snippet</th></tr></thead>
+<tbody>
+{% for item in history %}
+<tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+<td style="padding: 15px; white-space: nowrap;">{{
+item.date_processed.strftime('%Y-%m-%d %H:%M') }}</td>
+<td style="padding: 15px;">{{ item.original_text[:100] }}...</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}
