@@ -1,300 +1,189 @@
+<!-- File: templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroLearn | Accessible Learning Platform</title>
+    <title>NeuroLearn | Beyond Reading</title>
     
-    <link href="https://cdn.jsdelivr.net/npm/opendyslexic@1.0.3/opendyslexic.min.css" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #4338ca;
-            --text: #1e293b;
-            --card: rgba(255, 255, 255, 0.9);
-            --success: #059669;
-            --gradient-start: #fce7f3;
-            --gradient-end: #e0f2fe;
-            --pastel-blue: #e0f2fe;
-            --pastel-pink: #fdf2f8;
-            --pink-accent: #be185d;
+            --bg-dark: #050505;
+            --accent-cyan: #00F2FF;
+            --accent-purple: #7000FF;
+            --glass: rgba(255, 255, 255, 0.03);
+            --text-main: #FFFFFF;
         }
 
-        /* Accessibility Mode Overrides */
-        body.theme-dark { 
-            background: #0f172a !important; 
-            --text: #f1f5f9; 
-            --card: #1e293b; 
-            --primary: #818cf8; 
-            --pastel-blue: #1e293b;
-        }
-        body.font-dyslexic, body.font-dyslexic * { font-family: 'OpenDyslexic', sans-serif !important; }
-
-        * { box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            margin: 0; padding: 0; min-height: 100vh;
-            color: var(--text); line-height: 1.7;
-            transition: background 0.4s ease, color 0.3s ease;
-            background-color: white;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             overflow-x: hidden;
+            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #050505 100%);
         }
 
-        /* FIXED BACKGROUND LAYERS */
-        body::after {
-            content: "";
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-            opacity: 0.65; z-index: -2; pointer-events: none;
+        /* --- STUNNING NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            padding: 25px 50px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5, 5, 5, 0.5); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; color: var(--accent-cyan); }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { text-decoration: none; color: rgba(255,255,255,0.6); font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent-cyan); }
+        .btn-glow {
+            padding: 12px 30px; border-radius: 50px; background: white;
+            color: black; font-weight: 700; text-decoration: none;
+            transition: 0.4s; box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
-        body::before {
-            content: "";
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=1600');
-            background-size: cover; background-position: center;
-            opacity: 0.12; z-index: -1; pointer-events: none;
+        /* --- HERO SECTION (KEEPING AS IS) --- */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 0 20px; position: relative;
         }
-
-        .page-wrapper { position: relative; z-index: 1; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-
-        /* UPDATED TOOLBAR: Centered buttons with matched font size */
-        .toolbar {
-            position: sticky; top: 0; z-index: 1000;
-            background: var(--card); padding: 0.8rem 2rem;
-            display: flex; 
-            justify-content: center; /* Centers the mode buttons */
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-            backdrop-filter: blur(10px);
+        .scroll-text {
+            white-space: nowrap; font-size: 10rem; font-weight: 800; opacity: 0.03;
+            position: absolute; width: 100%; pointer-events: none;
         }
-
-        .accessibility-tools { display: flex; gap: 10px; }
-
-        /* Matched to About Page: 0.85rem */
-        .tool-btn {
-            padding: 8px 20px; border: 2px solid var(--primary);
-            background: transparent; color: var(--primary);
-            border-radius: 30px; cursor: pointer; font-weight: 600; 
-            font-size: 0.85rem; 
-            transition: 0.3s;
-            text-decoration: none;
+        .hero h1 {
+            font-size: 7rem; font-weight: 800; line-height: 0.9; margin-bottom: 25px;
+            background: linear-gradient(to bottom, #fff 40%, rgba(255,255,255,0.2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .tool-btn:hover, .tool-btn.active { background: var(--primary); color: white; }
+        .hero p { font-size: 1.4rem; max-width: 700px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
 
-        /* Pushes Nav links to the right while keeping center centered */
-        .nav-actions { 
-            position: absolute;
-            right: 2rem;
-            display: flex; 
-            gap: 15px; 
-            align-items: center; 
-        }
-
-        .nav-link { text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.85rem; }
+        /* --- NEW PREMIUM IMAGE SECTIONS --- */
+        .feature-showcase { padding: 100px 50px; max-width: 1300px; margin: 0 auto; }
         
-        .btn-register {
-            text-decoration: none; background: var(--primary); color: white;
-            padding: 8px 20px; border-radius: 30px; font-weight: 700; transition: 0.3s;
-            font-size: 0.85rem;
+        .feature-row {
+            display: flex; align-items: center; gap: 80px; margin-bottom: 150px;
         }
+        .feature-row:nth-child(even) { flex-direction: row-reverse; }
 
-        /* Section Styling */
-        section { padding: 4rem 0; }
-        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 3.5rem; color: var(--primary); }
-        .logo-img { max-width: 1000px; height: auto; display: block; margin: 3rem auto; }
-
-        /* Problem & Feature Cards */
-        .problem-grid, .how-it-works-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 25px; justify-items: center; 
+        .feature-content { flex: 1; }
+        .feature-content h2 { 
+            font-size: 3.5rem; font-weight: 800; margin-bottom: 25px; 
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-
-        .problem-card, .feature-card {
-            background: var(--card); padding: 2rem; border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); width: 100%; text-align: center;
+        .feature-content p { font-size: 1.3rem; color: rgba(255,255,255,0.6); line-height: 1.8; margin-bottom: 30px; }
+        
+        .feature-image {
+            flex: 1.2; position: relative; border-radius: 50px; overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
         }
-        .problem-card { border-left: 8px solid #f9a8d4; }
-        .feature-card { border-bottom: 6px solid var(--primary); }
+        .feature-image img { width: 100%; display: block; transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .feature-image:hover img { transform: scale(1.1); }
 
-        .card-img {
-            width: 100%; height: 180px; object-fit: cover;
-            border-radius: 12px; margin-bottom: 1.5rem;
+        /* Floating Info Box */
+        .info-card {
+            position: absolute; bottom: 30px; left: 30px; background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px); padding: 20px 30px; border-radius: 25px;
+            border: 1px solid var(--accent-cyan);
         }
+        .info-card h4 { color: var(--accent-cyan); font-weight: 800; }
 
-        /* PASTEL BLUE SANDBOX DESIGN */
-        .sandbox {
-            background: var(--pastel-blue);
-            padding: 2.5rem; border-radius: 30px;
-            border: 4px solid transparent; 
-            max-width: 850px; margin: 0 auto; 
-            transition: 0.3s ease;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-        }
-        .sandbox:focus-within { 
-            border-color: var(--primary); 
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); 
-        }
+        footer { padding: 80px 50px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
 
-        .sandbox-label { 
-            display: block; text-align: center; font-weight: bold; 
-            margin-bottom: 1rem; color: var(--primary); 
-        }
-
-        .text-area-calm { 
-            width: 100%; height: 180px; padding: 1.2rem; border-radius: 12px; 
-            border: 2px solid #bae6fd; background: #f8fafc;
-            font-size: 1.1rem; font-family: inherit; resize: none; margin-bottom: 1.5rem;
-        }
-
-        /* PASTEL PINK ACTION BUTTON */
-        .btn-action { 
-            width: 100%; padding: 15px; font-size: 1.15rem; border-radius: 30px;
-            background: var(--pastel-pink); color: var(--pink-accent);
-            border: 2px solid #fbcfe8; cursor: pointer; font-weight: bold;
-            transition: transform 0.2s ease, background 0.3s ease;
-        }
-        .btn-action:hover { transform: translateY(-3px); background: #fbcfe8; }
-
-        .preview-box { 
-            padding: 1.5rem; border: 2px dashed var(--primary); border-radius: 12px; 
-            background: rgba(255, 255, 255, 0.7); margin-top: 1rem;
-        }
-
-        .hidden { display: none; }
-
-        @media (max-width: 900px) {
-            .toolbar { flex-direction: column; gap: 15px; padding: 1.5rem; }
-            .nav-actions { position: static; margin-top: 10px; }
-            h2 { font-size: 2rem; }
-        }
     </style>
 </head>
 <body>
 
-<div class="page-wrapper">
-    <nav class="toolbar">
-        <div class="accessibility-tools">
-            <button class="tool-btn active" id="stdBtn" onclick="setTheme('default')">Standard Mode</button>
-            <button class="tool-btn" id="darkBtn" onclick="setTheme('dark')">Dark Mode</button>
-            <button class="tool-btn" onclick="toggleDyslexic()">Dyslexic Font</button>
+    <nav>
+        <div class="logo">NEUROLEARN</div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Vision</a>
+            <a href="{{ url_for('reader') }}">Interface</a>
+            
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('profile') }}">Settings</a>
+            {% else %}
+                <a href="{{ url_for('about') }}">Philosophy</a>
+                <a href="{{ url_for('login') }}">Identity</a>
+            {% endif %}
         </div>
-        
-        <div class="nav-actions">
-            <a href="{{ url_for('about') }}" class="nav-link">About</a>
-            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-            <a href="{{ url_for('register') }}" class="btn-register">Register</a>
-        </div>
+
+        {% if current_user.is_authenticated %}
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <span style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">Hi, {{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="btn-glow" style="background: transparent; color: white; border: 1px solid white;">LOGOUT</a>
+            </div>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn-glow">BEYOND READING</a>
+        {% endif %}
     </nav>
 
-    <div class="container">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="NeuroLearn Logo" class="logo-img" data-aos="fade-in">
-
-        <section data-aos="fade-up">
-            <h2>Studying Shouldn't Be a Battle</h2>
-            <div class="problem-grid">
-                <div class="problem-card" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="{{ url_for('static', filename='dancing.png') }}" alt="Dancing Text" class="card-img">
-                    <h3>The "Dancing" Text</h3>
-                    <p>Letters flip or move for Dyslexic readers. We use weighted fonts to keep every word grounded.</p>
-                </div>
-                <div class="problem-card" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="{{ url_for('static', filename='focus.png') }}" alt="Focus Fog" class="card-img">
-                    <h3>The Focus Fog</h3>
-                    <p>ADHD minds get lost in giant paragraphs. Our focus tools highlight one sentence at a time.</p>
-                </div>
-                <div class="problem-card" data-aos="zoom-in" data-aos-delay="300">
-                    <img src="{{ url_for('static', filename='burnout.png') }}" alt="Sensory Burnout" class="card-img">
-                    <h3>Sensory Burnout</h3>
-                    <p>Harsh white screens cause headaches. Our custom pastel tints make reading comfortable.</p>
-                </div>
-            </div>
-        </section>
-
-        <section data-aos="fade-up">
-            <h2>How It Works</h2>
-            <div class="how-it-works-grid">
-                <div class="feature-card" data-aos="flip-left" data-aos-delay="100">
-                    <img src="{{ url_for('static', filename='font-swap.png') }}" class="card-img">
-                    <h3>Font Swapping</h3>
-                    <p>Instantly switch to fonts designed to prevent letter rotation.</p>
-                </div>
-                <div class="feature-card" data-aos="flip-left" data-aos-delay="200">
-                    <img src="{{ url_for('static', filename='reading-ruler.png') }}" class="card-img">
-                    <h3>Reading Ruler</h3>
-                    <p>A visual guide that follows your cursor to help you focus.</p>
-                </div>
-                <div class="feature-card" data-aos="flip-left" data-aos-delay="300">
-                    <img src="{{ url_for('static', filename='audio-mode.png') }}" class="card-img">
-                    <h3>Audio Mode</h3>
-                    <p>Listen as you read to increase comprehension.</p>
-                </div>
-                <div class="feature-card" data-aos="flip-left" data-aos-delay="400">
-                    <img src="{{ url_for('static', filename='simplification.png') }}" class="card-img">
-                    <h3>Simplification</h3>
-                    <p>Break down dense text into clear bullet points.</p>
-                </div>
-            </div>
-        </section>
-
-        <section data-aos="fade-up">
-            <h2>Try the Transformation</h2>
-            <div class="sandbox">
-                <label for="userInput" class="sandbox-label">Paste confusing text below:</label>
-                <textarea id="userInput" class="text-area-calm" placeholder="Paste your text here..."></textarea>
-                <button class="btn-action" onclick="transformText()">✨ Transform My Text</button>
-                
-                <div id="outputArea" class="hidden">
-                    <p class="sandbox-label" style="margin-top: 2rem; color: var(--pink-accent);">Your Optimized View:</p>
-                    <div class="preview-box" id="previewText"></div>
-                </div>
-            </div>
-        </section>
-
-        <div style="text-align: center; padding: 5rem 0;" data-aos="fade-up">
-            <a href="{{ url_for('register') }}" class="btn-register" style="padding: 1.2rem 3.5rem; font-size: 1.3rem;">Start Reading Comfortably</a>
+    <div class="hero">
+        <div class="scroll-text">DYSLEXIA AI DYSLEXIA AI</div>
+        <h1 data-aos="fade-up">READ WITHOUT <br> BOUNDARIES.</h1>
+        <p data-aos="fade-up" data-aos-delay="200">The world's first neural adaptation engine that redefines how the dyslexic mind processes information.</p>
+        <div data-aos="fade-up" data-aos-delay="400">
+            <a href="/reader" class="btn-glow" style="padding: 20px 60px; font-size: 1.2rem;">INITIALIZE INTERFACE</a>
         </div>
     </div>
-</div>
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-    AOS.init({ duration: 1000, once: true });
-
-    function setTheme(theme) {
-        document.body.classList.remove('theme-dark');
-        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-        if (theme === 'dark') {
-            document.body.classList.add('theme-dark');
-            document.getElementById('darkBtn').classList.add('active');
-        } else {
-            document.getElementById('stdBtn').classList.add('active');
-        }
-    }
-
-    function toggleDyslexic() { document.body.classList.toggle('font-dyslexic'); }
-
-    function transformText() {
-        const input = document.getElementById('userInput').value;
-        const outputArea = document.getElementById('outputArea');
-        const preview = document.getElementById('previewText');
+    <div class="feature-showcase">
         
-        outputArea.classList.remove('hidden');
-        preview.style.letterSpacing = "0.12em";
-        preview.style.wordSpacing = "0.2em";
-        preview.style.lineHeight = "2.2";
-        preview.innerText = input;
-        
-        outputArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-</script>
+        <!-- Section 1: Focus & Calm -->
+        <div class="feature-row" data-aos="fade-up">
+            <div class="feature-content">
+                <h2>Magic Focus. <br> Zero Distraction.</h2>
+                <p>We believe reading should feel like a superpower, not a struggle. Our AI creates a custom visual path for your eyes, keeping every word grounded and crystal clear.</p>
+                <div style="display: flex; gap: 15px;">
+                    <span style="color: var(--accent-cyan);"><i class="fas fa-check-circle"></i> No Letter Flipping</span>
+                    <span style="color: var(--accent-cyan);"><i class="fas fa-check-circle"></i> Zero Eye Strain</span>
+                </div>
+            </div>
+            <div class="feature-image">
+                <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80" alt="Focus Mode">
+                <div class="info-card">
+                    <h4>STABILIZATION 2.0</h4>
+                    <p style="font-size: 0.8rem; opacity: 0.6;">Weighted Optical Core</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Audio/Visual Learning -->
+        <div class="feature-row" data-aos="fade-up">
+            <div class="feature-content">
+                <h2>Hear Every Word, <br> Master Every Page.</h2>
+                <p>Engage your auditory senses to lock in comprehension. Our human-like AI voice synchronizes perfectly with the text, making sure you stay on track through every single sentence.</p>
+                <a href="/reader" class="btn-glow" style="display: inline-block; margin-top: 20px;">EXPLORE AUDIO MODE</a>
+            </div>
+            <div class="feature-image">
+                <img src="https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&w=1200&q=80" alt="Audio Learning">
+                <div class="info-card" style="border-color: var(--accent-purple);">
+                    <h4>SONIC SYNC</h4>
+                    <p style="font-size: 0.8rem; opacity: 0.6;">Binaural Learning Tech</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="text-align: center; padding: 100px 20px;" data-aos="zoom-in">
+        <h2 style="font-size: 4rem; font-weight: 800; margin-bottom: 20px;">THE REVOLUTION <br> IS HERE.</h2>
+        <p style="opacity: 0.5; margin-bottom: 40px;">Join thousands of students who have changed their relationship with words.</p>
+        <a href="/register" class="btn-glow" style="padding: 25px 80px; font-size: 1.4rem; background: var(--accent-cyan);">JOIN THE FUTURE</a>
+    </div>
+
+    <footer>
+        NEUROLEARN © 2024 | THE FUTURE IS ACCESSIBLE
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1500, once: true });
+    </script>
 </body>
 </html>
