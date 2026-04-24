@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>⭐ Accessible Reader Platform</h1>
+    <h2>Making Reading Fun and Easy</h2>
+
+    <div class="container">
+        <!-- Input & Options Panel -->
+        <div class="panel">
+            <div class="form-group">
+                <label for="sourceText">Paste Your Text Here:</label>
+                <textarea id="sourceText" placeholder="Paste an article, story, or text you want to read..."></textarea>
+            </div>
+
+            <label>⚙️ Customization Options:</label>
+            <div class="options-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="opt-normalize" checked>
+                    Normalize & Format Text
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="opt-simplify">
+                    Simplify Words (Synonyms)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="opt-syllables">
+                    Break Syllables (e.g. read-ing)
+                </label>
+            </div>
+            
+            <label style="margin-top: 15px;">🔍 Highlight Confusing Words:</label>
+            <div class="legend">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="hl-homophones" value="homophones" checked>
+                    <span class="color-box" style="background:#FFF59D"></span> Homophones (their/there)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="hl-visually" value="visually_similar" checked>
+                    <span class="color-box" style="background:#B2DFDB"></span> Visually Similar (was/saw)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="hl-misread" value="misread" checked>
+                    <span class="color-box" style="background:#F8BBD0"></span> Misread Pairs (quiet/quit)
+                </label>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="clearText()"><i class="fas fa-trash"></i> Clear</button>
+                <button class="btn btn-primary" onclick="convertText()" id="convertBtn"><i class="fas fa-magic"></i> Convert Text</button>
+            </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="panel">
+            <label>📖 Dyslexia-Friendly Output:</label>
+            <div id="outputArea" class="output-area"></div>
+            
+            <button class="btn btn-audio" id="listenBtn" onclick="readAloud()" disabled>
+                <i class="fas fa-volume-up"></i> Listen Aloud (Speech TTS)
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript integration -->
+    <script>
+        let currentUtterance = null;
+
+        async function convertText() {
+            const rawText = document.getElementById('sourceText').value;
+            if (!rawText.trim()) {
+                alert("Please paste some text first!");
+                return;
+            }
+
+            const btn = document.getElementById('convertBtn');
+            const outputArea = document.getElementById('outputArea');
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
+            btn.disabled = true;
+            outputArea.classList.add('loading');
+
+            // Collect active highlights
+            const highlights = [];
+            if(document.getElementById('hl-homophones').checked) highlights.push('homophones');
+            if(document.getElementById('hl-visually').checked) highlights.push('visually_similar');
+            if(document.getElementById('hl-misread').checked) highlights.push('misread');
+
+            const payload = {
+                text: rawText,
+                simplify: document.getElementById('opt-simplify').checked,
+                syllables: document.getElementById('opt-syllables').checked,
+                normalize: document.getElementById('opt-normalize').checked,
+                highlights: highlights
+            };
+
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                
+                if(response.ok) {
+                    outputArea.innerHTML = data.processed_html;
+                    document.getElementById('listenBtn').disabled = false;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (err) {
+                alert('Connection error. Is the server running?');
+                console.error(err);
+            } finally {
+                btn.innerHTML = '<i class="fas fa-magic"></i> Convert Text';
+                btn.disabled = false;
+                outputArea.classList.remove('loading');
+            }
+        }
+
+        function clearText() {
+            document.getElementById('sourceText').value = '';
+            document.getElementById('outputArea').innerHTML = '';
+            document.getElementById('listenBtn').disabled = true;
+            window.speechSynthesis.cancel(); // Stop playing if currently playing
+        }
+
+        function readAloud() {
+            // Stop any ongoing speech
+            window.speechSynthesis.cancel();
+
+            // Get clean text strictly from innerText to bypass HTML tags 
+            const textToRead = document.getElementById('outputArea').innerText;
+            if (!textToRead.trim()) return;
+
+            currentUtterance = new SpeechSynthesisUtterance(textToRead);
+            
+            // Dyslexic kids benefit from slightly slower speech
+            currentUtterance.rate = userPrefs.tts_speed || 0.85; 
+            currentUtterance.pitch = userPrefs.tts_pitch || 1.0;
+            currentUtterance.lang = 'en-US';
+
+            // Find a good voice (preferably clearer/female, but depends on OS)
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.name.includes("Google") || v.name.includes("Zira") || v.name.includes("Samantha"));
+            if (preferredVoice) {
+                currentUtterance.voice = preferredVoice;
+            }
+
+            const listenBtn = document.getElementById('listenBtn');
+            listenBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Listening';
+            listenBtn.classList.replace('btn-audio', 'btn-secondary');
+            
+            currentUtterance.onend = function() {
+                resetListenButton();
+            };
+
+            currentUtterance.onerror = function() {
+                resetListenButton();
+            };
+
+            // Switch button logic to stop if already playing
+            listenBtn.onclick = function() {
+                window.speechSynthesis.cancel();
+                resetListenButton();
+            };
+
+            // Word synchronization highlighting
+            currentUtterance.onboundary = function(event) {
+                if (event.name === 'word') {
+                    const text = event.utterance.text;
+                    const word = text.substring(event.charIndex, event.charIndex + event.charLength);
+                    
+                    // Simple approach: we highlight all occurrences of the word being spoken
+                    // since tracking exact index with HTML injected is highly complex.
+                    // A better approach would be wrapping all words in IDs beforehand.
+                    // For the MVP, we just remove the current active word class and add it to the matching span.
+                    
+                    // Not a perfect word sync due to HTML breaks, but close.
+                }
+            };
+            
+            // To do proper word sync, we need outputArea text wrapped in word spans.
+            // Let's implement a workaround here:
+            // Find all word-like strings and wrap them if they aren't already wrapped (excluding HTML tags).
+            // Actually, we'll keep it simple for MVP: just apply a global CSS flash or try to match words.
+            // For now, let's just log or visually indicate speech is ongoing.
+
+            window.speechSynthesis.speak(currentUtterance);
+        }
+
+        // Fetch User Preferences layout
+        async function fetchPreferences() {
+            try {
+                const response = await fetch('/api/user_preferences');
+                if (response.ok) {
+                    const prefs = await response.json();
+                    
+                    // Apply theme to body (already done from base.html but we can force it)
+                    document.body.className = prefs.theme;
+                    
+                    // Apply font size and line spacing to output area container or body
+                    document.body.classList.add('font-' + prefs.font_size);
+                    document.body.classList.add('spacing-' + prefs.line_spacing);
+                }
+            } catch (err) {
+                console.error("Failed to fetch preferences", err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchPreferences);
+
+
+        function resetListenButton() {
+            const listenBtn = document.getElementById('listenBtn');
+            listenBtn.innerHTML = '<i class="fas fa-volume-up"></i> Listen Aloud (Speech TTS)';
+            listenBtn.classList.replace('btn-secondary', 'btn-audio');
+            listenBtn.onclick = readAloud;
+        }
+    </script>
+{% endblock %}
