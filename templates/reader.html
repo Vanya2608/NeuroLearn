@@ -17,6 +17,18 @@
             --accent-pink: #fbcfe8;
             --accent-blue: #bae6fd;
             --glass-card: rgba(255, 255, 255, 0.6);
+            --nav-bg: rgba(255, 255, 255, 0.3);
+            --input-bg: rgba(255, 255, 255, 0.4);
+        }
+
+        /* DARK MODE VARIABLES */
+        body.theme-dark {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --text-main: #f1f5f9;
+            --primary-indigo: #818cf8;
+            --glass-card: rgba(30, 41, 59, 0.7);
+            --nav-bg: rgba(15, 23, 42, 0.8);
+            --input-bg: rgba(15, 23, 42, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
@@ -25,11 +37,11 @@
             margin: 0; padding: 0; min-height: 100vh;
             color: var(--text-main);
             background: var(--bg-gradient);
+            transition: all 0.4s ease;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* FEATHER BACKGROUND LOGIC */
         body::before {
             content: "";
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -38,62 +50,62 @@
             opacity: 0.15; z-index: -1; pointer-events: none;
         }
 
-        /* --- CENTERED NAVIGATION --- */
+        /* --- NAVIGATION --- */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 1000;
             padding: 20px 50px; 
             display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
-            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.5);
+            background: var(--nav-bg); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary-indigo); text-decoration: none; justify-self: start; }
-        .nav-links { display: flex; gap: 35px; align-items: center; justify-self: center; }
-        .nav-links a { text-decoration: none; color: rgba(30, 27, 75, 0.7); font-weight: 600; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary-indigo); }
-        .nav-right { justify-self: end; margin-right: 40px; }
+        
+        .nav-links { display: flex; gap: 30px; align-items: center; justify-self: center; }
+        .nav-links a, .theme-btn { 
+            text-decoration: none; color: var(--text-main); opacity: 0.7;
+            font-weight: 600; transition: 0.3s; font-size: 0.95rem; background: none; border: none; cursor: pointer;
+        }
+        .nav-links a:hover, .theme-btn:hover { opacity: 1; color: var(--primary-indigo); }
+        
+        .nav-right { justify-self: end; display: flex; gap: 15px; align-items: center; }
 
         .btn-glow {
-            padding: 12px 30px; border-radius: 50px; background: var(--primary-indigo);
+            padding: 10px 25px; border-radius: 50px; background: var(--primary-indigo);
             color: white !important; font-weight: 700; text-decoration: none;
-            transition: 0.4s; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.2);
-            border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
+            transition: 0.4s; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.15);
+            border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
         }
-        .btn-glow:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(67, 56, 202, 0.3); }
-        .btn-glow:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-glow:hover { transform: translateY(-2px); }
 
-        /* --- READER CONTENT --- */
+        /* --- CONTENT --- */
         .container { max-width: 900px; margin: 120px auto 50px; padding: 0 20px; }
         
         .panel {
             background: var(--glass-card); backdrop-filter: blur(15px);
-            border-radius: 30px; padding: 40px; border: 1px solid white;
+            border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 20px 50px rgba(0,0,0,0.05); margin-bottom: 30px;
         }
 
         h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 20px; color: var(--primary-indigo); }
 
         textarea {
-            width: 100%; height: 250px; border-radius: 20px; border: 2px solid white;
-            padding: 20px; font-size: 1.1rem; background: rgba(255,255,255,0.4);
+            width: 100%; height: 250px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.3);
+            padding: 20px; font-size: 1.1rem; background: var(--input-bg);
             color: var(--text-main); outline: none; transition: 0.3s; resize: vertical;
         }
-        textarea:focus { border-color: var(--primary-indigo); background: white; }
+        textarea:focus { border-color: var(--primary-indigo); }
 
         .options-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-            margin: 25px 0; padding: 20px; background: rgba(255,255,255,0.3); border-radius: 20px;
+            margin: 25px 0; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 20px;
         }
-        .opt-col label { 
-            cursor: pointer; font-weight: 600; display: flex; align-items: center; 
-            gap: 12px; margin-bottom: 12px; font-size: 0.95rem;
-        }
+        .opt-col label { cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
 
         .output-area {
-            min-height: 150px; background: white; border-radius: 20px;
+            min-height: 180px; background: var(--input-bg); border-radius: 20px;
             padding: 25px; line-height: 1.8; font-size: 1.2rem;
-            border: 2px solid var(--accent-blue); box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+            border: 2px solid var(--accent-blue);
         }
-
     </style>
 </head>
 <body>
@@ -103,10 +115,19 @@
     <div class="nav-links">
         <a href="{{ url_for('index') }}">Vision</a>
         <a href="{{ url_for('about') }}">About</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+        {% endif %}
+        <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i> Dark Mode
+        </button>
     </div>
     <div class="nav-right">
         {% if current_user.is_authenticated %}
-            <a href="{{ url_for('profile') }}" class="btn-glow">SETTINGS</a>
+            <a href="{{ url_for('profile') }}" class="btn-glow" style="background: white; color: #4338ca !important; border: 1px solid #4338ca;">
+                <i class="fas fa-user-cog"></i> SETTINGS
+            </a>
+            <a href="{{ url_for('logout') }}" class="btn-glow">LOGOUT</a>
         {% else %}
             <a href="{{ url_for('login') }}" class="btn-glow">LOGIN</a>
         {% endif %}
@@ -116,47 +137,33 @@
 <div class="container" data-aos="fade-up">
     <div class="panel">
         <h1>Accessible Reader</h1>
-        <p style="margin-bottom: 20px; opacity: 0.7;">Customize your reading experience using AI-driven neural adaptation.</p>
-        
         <textarea id="sourceText" placeholder="Start typing or paste your content here..."></textarea>
         
         <div style="margin-top: 25px; display: flex; gap: 15px;">
-            <button class="btn-glow" onclick="convertText()" id="convertBtn">
-                <i class="fas fa-sync-alt"></i> CONVERT TEXT
-            </button>
-            <button class="btn-glow" onclick="clearReader()" style="background: rgba(30, 27, 75, 0.1); color: var(--text-main) !important; box-shadow: none; border: 1px solid rgba(30, 27, 75, 0.2);">
-                <i class="fas fa-trash-alt"></i> CLEAR
-            </button>
+            <button class="btn-glow" onclick="convertText()" id="convertBtn"><i class="fas fa-sync-alt"></i> CONVERT TEXT</button>
+            <button class="btn-glow" onclick="clearReader()" style="background: rgba(128,128,128,0.2); color: var(--text-main) !important; box-shadow: none;">CLEAR</button>
         </div>
 
-        <hr style="margin: 30px 0; opacity: 0.1;">
-
-        <h4 style="margin-bottom: 15px; color: var(--primary-indigo);">Customization Options:</h4>
         <div class="options-grid">
             <div class="opt-col">
-                <label><input type="checkbox" id="opt-normalize" checked> Normalize & Format Text</label>
-                <label><input type="checkbox" id="opt-simplify"> Simplify Words (Synonyms)</label>
-                <label><input type="checkbox" id="opt-syllables"> Break Syllables (e.g. read-ing)</label>
+                <label><input type="checkbox" id="opt-normalize" checked> Normalize & Format</label>
+                <label><input type="checkbox" id="opt-simplify"> Simplify Words</label>
+                <label><input type="checkbox" id="opt-syllables"> Break Syllables</label>
             </div>
             <div class="opt-col">
-                <p style="font-weight: 800; font-size: 0.75rem; margin-bottom: 10px; opacity: 0.6; letter-spacing: 1px; color: var(--primary-indigo);">HIGHLIGHT CONFUSING WORDS:</p>
-                <label><input type="checkbox" id="opt-homophones"> Homophones (their/there)</label>
-                <label><input type="checkbox" id="opt-similar"> Visually Similar (was/saw)</label>
-                <label><input type="checkbox" id="opt-misread"> Misread Pairs (quiet/quit)</label>
+                <label><input type="checkbox" id="opt-homophones"> Homophones</label>
+                <label><input type="checkbox" id="opt-similar"> Visually Similar</label>
+                <label><input type="checkbox" id="opt-misread"> Misread Pairs</label>
             </div>
         </div>
     </div>
 
-    <div class="panel" data-aos="fade-up" data-aos-delay="200">
+    <div class="panel" data-aos="fade-up">
         <h3 style="margin-bottom: 15px; color: var(--primary-indigo);">Neural Output</h3>
-        
         <div id="outputArea" class="output-area">Processed text will appear here...</div>
-        
         <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
-            <button class="btn-glow" id="listenBtn" onclick="readAloud()" disabled>
-                🔊 READ ALOUD
-            </button>
-            <span id="audioStatus" style="font-size: 0.9rem; opacity: 0.6; font-weight: 600; color: var(--primary-indigo);"></span>
+            <button class="btn-glow" id="listenBtn" onclick="readAloud()" disabled>🔊 READ ALOUD</button>
+            <span id="audioStatus" style="font-size: 0.9rem; opacity: 0.6; font-weight: 600;"></span>
         </div>
     </div>
 </div>
@@ -165,62 +172,52 @@
 <script>
     AOS.init({ duration: 1000, once: true });
 
+    function toggleTheme() {
+        document.body.classList.toggle('theme-dark');
+        const icon = document.querySelector('#themeToggle i');
+        const text = document.querySelector('#themeToggle');
+        if(document.body.classList.contains('theme-dark')) {
+            icon.classList.replace('fa-moon', 'fa-sun');
+            text.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+            text.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+        }
+    }
+
     function clearReader() {
         document.getElementById('sourceText').value = '';
         document.getElementById('outputArea').innerHTML = 'Processed text will appear here...';
         document.getElementById('listenBtn').disabled = true;
-        document.getElementById('audioStatus').innerText = '';
-        window.speechSynthesis.cancel();
     }
 
     async function convertText() {
         const rawText = document.getElementById('sourceText').value;
-        const btn = document.getElementById('convertBtn');
-        const outputArea = document.getElementById('outputArea');
-        
         if(!rawText) return;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
+        document.getElementById('convertBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i>...';
         
-        const payload = {
-            text: rawText,
-            normalize: document.getElementById('opt-normalize').checked,
-            simplify: document.getElementById('opt-simplify').checked,
-            syllables: document.getElementById('opt-syllables').checked,
-            homophones: document.getElementById('opt-homophones').checked,
-            similar: document.getElementById('opt-similar').checked,
-            misread: document.getElementById('opt-misread').checked
-        };
-
         try {
             const response = await fetch('/process', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ text: rawText })
             });
-
             const data = await response.json();
-            outputArea.innerHTML = data.processed_html;
+            document.getElementById('outputArea').innerHTML = data.processed_html;
             document.getElementById('listenBtn').disabled = false;
-        } catch (error) {
-            outputArea.innerHTML = "<span style='color:red;'>Processing failed. Check backend connection.</span>";
+        } catch (e) {
+            document.getElementById('outputArea').innerText = "Error: Check backend.";
         } finally {
-            btn.innerHTML = '<i class="fas fa-sync-alt"></i> CONVERT TEXT';
+            document.getElementById('convertBtn').innerHTML = '<i class="fas fa-sync-alt"></i> CONVERT TEXT';
         }
     }
 
     function readAloud() {
         window.speechSynthesis.cancel();
-        const text = document.getElementById('outputArea').innerText;
-        const msg = new SpeechSynthesisUtterance(text);
-        const status = document.getElementById('audioStatus');
-        
-        msg.onstart = () => status.innerText = "Speaking...";
-        msg.onend = () => status.innerText = "";
-        
-        msg.rate = 0.85; 
+        const msg = new SpeechSynthesisUtterance(document.getElementById('outputArea').innerText);
+        msg.rate = 0.85;
         window.speechSynthesis.speak(msg);
     }
 </script>
-
 </body>
 </html>

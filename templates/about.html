@@ -5,35 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About NeuroLearn | Vision & Scope</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/opendyslexic@1.0.3/opendyslexic.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #fce7f3 0%, #e0f2fe 100%);
-            --text: #1e293b;
-            --primary: #4338ca; 
-            --secondary: #6366f1;
-            --card: rgba(255, 255, 255, 0.9);
-            --glass: rgba(255, 255, 255, 0.3);
-            --success: #059669;
+            --text-main: #1e1b4b;
+            --primary-indigo: #4338ca;
+            --accent-blue: #bae6fd;
+            --glass-card: rgba(255, 255, 255, 0.6);
+            --nav-bg: rgba(255, 255, 255, 0.3);
         }
 
-        body.theme-dark { background: #0f172a !important; --text: #f1f5f9; --card: #1e293b; --primary: #818cf8; }
+        body.theme-dark {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --text-main: #f1f5f9;
+            --primary-indigo: #818cf8;
+            --glass-card: rgba(30, 41, 59, 0.7);
+            --nav-bg: rgba(15, 23, 42, 0.8);
+        }
+
         body.font-dyslexic, body.font-dyslexic * { font-family: 'OpenDyslexic', sans-serif !important; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Lexend', sans-serif;
-            margin: 0; padding: 0; min-height: 100vh;
-            color: var(--text); line-height: 1.6;
+            min-height: 100vh;
+            color: var(--text-main);
             background: var(--bg-gradient);
-            transition: background 0.4s ease; overflow-x: hidden;
+            transition: all 0.4s ease;
+            overflow-x: hidden;
             position: relative;
         }
 
-        /* Feather Background Logic */
         body::before {
             content: "";
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -42,141 +50,184 @@
             opacity: 0.15; z-index: -1; pointer-events: none;
         }
 
-        /* --- CENTERED NAVIGATION (GRID SYSTEM) --- */
+        /* --- CENTERED NAVIGATION --- */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 1000;
             padding: 20px 50px; 
-            display: grid;
-            grid-template-columns: 1fr auto 1fr; 
-            align-items: center;
-            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.5);
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+            background: var(--nav-bg); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
-        .logo { 
-            font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; 
-            color: var(--primary); text-decoration: none; 
-            justify-self: start;
+        .logo { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--primary-indigo); text-decoration: none; justify-self: start; }
+        .nav-links { display: flex; gap: 25px; align-items: center; justify-self: center; }
+        .nav-links a, .theme-btn { 
+            text-decoration: none; color: var(--text-main); opacity: 0.7; font-weight: 600; 
+            transition: 0.3s; font-size: 0.95rem; background: none; border: none; cursor: pointer;
         }
-
-        .nav-links { 
-            display: flex; gap: 35px; align-items: center; 
-            justify-self: center; 
-        }
-
-        /* BUTTON POSITION ADJUSTED SLIGHTLY LEFT */
-        .nav-right { 
-            justify-self: end; 
-            margin-right: 60px; /* Adjust this value to control how far left the button moves */
-        }
-
-        .nav-links a, .nav-links button { 
-            text-decoration: none; color: rgba(30, 27, 75, 0.7); 
-            font-weight: 600; transition: 0.3s; background: none; border: none; cursor: pointer;
-            font-family: 'Lexend', sans-serif; font-size: 0.95rem;
-        }
-        .nav-links a:hover, .nav-links button:hover { color: var(--primary); transform: translateY(-1px); }
+        .nav-links a:hover, .theme-btn:hover { opacity: 1; color: var(--primary-indigo); }
+        .nav-right { justify-self: end; display: flex; gap: 15px; }
 
         .btn-glow {
-            padding: 12px 30px; border-radius: 50px; background: var(--primary);
+            padding: 10px 25px; border-radius: 50px; background: var(--primary-indigo);
             color: white !important; font-weight: 700; text-decoration: none;
-            transition: 0.4s; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.2);
-            display: inline-block;
+            transition: 0.4s; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.15);
+            border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem;
         }
-        .btn-glow:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(67, 56, 202, 0.3); }
 
-        /* Content Layout */
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; }
-        .about-hero { padding: 10rem 0 5rem; text-align: center; }
-        .about-hero h1 { 
-            font-size: 3.5rem; color: var(--primary); margin-bottom: 1rem; letter-spacing: -1px;
-            background: rgba(255, 255, 255, 0.4); display: inline-block;
-            padding: 0.5rem 2rem; border-radius: 20px; backdrop-filter: blur(5px);
-        }
+        /* --- CONTENT --- */
+        .container { max-width: 1100px; margin: 120px auto 50px; padding: 0 2rem; }
+        .about-hero { text-align: center; margin-bottom: 80px; }
+        .about-hero h1 { font-size: 3.5rem; font-weight: 800; color: var(--primary-indigo); margin-bottom: 20px; }
         
-        section { padding: 4rem 0; }
-        h2 { font-size: 1.8rem; color: var(--primary); font-weight: 700; margin-bottom: 1.5rem; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        section { padding: 60px 0; }
+        h2 { font-size: 2.2rem; color: var(--primary-indigo); font-weight: 800; margin-bottom: 30px; }
 
-        .img-styled {
-            width: 100%; border-radius: 25px;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1); border: 5px solid white;
-        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .img-styled { width: 100%; border-radius: 30px; border: 8px solid var(--glass-card); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
         .stats-banner {
-            background: var(--primary); color: white;
-            padding: 2.5rem; border-radius: 30px; text-align: center; margin: 2rem 0;
+            background: var(--primary-indigo); color: white;
+            padding: 40px; border-radius: 35px; text-align: center; margin: 40px 0;
         }
-        .stats-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1.5rem; }
-        .stat-item h2 { font-size: 2.2rem; margin: 0; color: white; }
+        .stats-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .stat-item h2 { font-size: 2.5rem; margin-bottom: 5px; color: white; }
+
+        /* Card Grids */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 40px; }
+        .feature-card {
+            background: var(--glass-card); backdrop-filter: blur(15px);
+            border-radius: 30px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.3s ease;
+        }
+        .feature-card:hover { transform: translateY(-10px); }
+        .card-content { padding: 25px; }
+        .card-img { width: 100%; height: 200px; object-fit: cover; }
 
         .footer-cta {
-            text-align: center; padding: 5rem 0; background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px); margin-top: 4rem; border-radius: 50px 50px 0 0;
+            text-align: center; padding: 100px 20px; background: var(--nav-bg); 
+            backdrop-filter: blur(10px); border-radius: 50px 50px 0 0; margin-top: 60px;
         }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="{{ url_for('index') }}" class="logo">NEUROLEARN</a>
-
+    <a href="/" class="logo">NEUROLEARN</a>
     <div class="nav-links">
-        <a href="{{ url_for('index') }}">Vision</a>
-        <button onclick="toggleDyslexic()"><i class="fas fa-font"></i> Dyslexic Font</button>
-        <button id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon"></i> Dark Mode</button>
+        <a href="/">Vision</a>
+        <a href="/reader">Interface</a>
+        <a href="/dashboard">Dashboard</a>
+        <button id="themeToggle" class="theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i> Dark Mode</button>
+        <button class="theme-btn" onclick="toggleDyslexic()"><i class="fas fa-font"></i> Dyslexic Font</button>
     </div>
-
     <div class="nav-right">
-        <a href="{{ url_for('reader') }}" class="btn-glow">INTERFACE</a>
+        <a href="/profile" class="btn-glow" style="background: white; color: #4338ca !important; border: 1px solid #4338ca;">
+            <i class="fas fa-user-cog"></i> SETTINGS
+        </a>
+        <a href="/logout" class="btn-glow">LOGOUT</a>
     </div>
 </nav>
 
 <div class="container">
     <header class="about-hero" data-aos="fade-down">
         <h1>Innovation for Every Brain</h1>
-        <p style="font-size: 1.2rem; max-width: 650px; margin: 1rem auto; opacity: 0.9; font-weight: 400; background: rgba(255,255,255,0.3); padding: 15px; border-radius: 15px; backdrop-filter: blur(2px);">
-            Redefining the digital landscape to empower neurodivergent minds globally.
-        </p>
+        <p style="font-size: 1.2rem; opacity: 0.8; max-width: 700px; margin: 0 auto;">Redefining the digital landscape to empower neurodivergent minds globally.</p>
     </header>
 
     <section class="grid-2">
         <div data-aos="fade-right">
             <h2>The "Invisible" Barrier</h2>
             <p>Traditional education platforms are designed for the neurotypical majority. For the 1 in 5 people with Dyslexia or ADHD, the digital world can feel like sensory noise.</p>
-            <p>NeuroLearn uses science-backed design to dismantle those barriers, allowing your natural intelligence to shine through without the visual clutter.</p>
+            <p style="margin-top: 15px;">NeuroLearn uses science-backed design to dismantle those barriers, allowing your natural intelligence to shine through.</p>
         </div>
         <div data-aos="fade-left">
-            <img src="https://www.swansea.ac.uk/som/research/researchimpact/AdobeStock_629677229_1_25.jpeg" class="img-styled" alt="Barrier Breaking">
+            <img src="https://www.swansea.ac.uk/som/research/researchimpact/AdobeStock_629677229_1_25.jpeg" class="img-styled" alt="Barrier">
         </div>
     </section>
 
     <section class="stats-banner" data-aos="zoom-in">
         <div class="stats-grid">
-            <div class="stat-item"><h2>20%</h2><p>Population is Neurodivergent</p></div>
-            <div class="stat-item"><h2>35%</h2><p>Better Focus Retention</p></div>
+            <div class="stat-item"><h2>20%</h2><p>Neurodivergent Population</p></div>
+            <div class="stat-item"><h2>35%</h2><p>Focus Retention</p></div>
             <div class="stat-item"><h2>Free</h2><p>Always for Students</p></div>
         </div>
     </section>
+
+    <section class="grid-2">
+        <div data-aos="fade-up">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800" class="img-styled" alt="Community">
+        </div>
+        <div data-aos="fade-up" data-aos-delay="200">
+            <h2>Community Driven</h2>
+            <p>We build <strong>with</strong> you, not just for you. Our roadmap is defined by neurodivergent learners. Every pixel is tested by those who see the world differently.</p>
+        </div>
+    </section>
+
+    <h2 style="text-align: center; margin-top: 80px;" data-aos="fade-up">Project Scope & Future</h2>
+    <div class="card-grid">
+        <div class="feature-card" data-aos="fade-up">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600" class="card-img" alt="AI">
+            <div class="card-content">
+                <h3>AI Content Adapting</h3>
+                <p>Developing real-time AI that simplifies complex medical and technical jargon into ADHD-friendly summaries.</p>
+            </div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <img src="https://images.unsplash.com/photo-1558403194-611308249627?auto=format&fit=crop&q=80&w=600" class="card-img" alt="Mobile">
+            <div class="card-content">
+                <h3>Mobile Ecosystem</h3>
+                <p>Expanding into a cross-platform mobile app that brings accessibility to textbooks via camera-scanning technology.</p>
+            </div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&q=80&w=600" class="card-img" alt="Data">
+            <div class="card-content">
+                <h3>Progress Analytics</h3>
+                <p>Empowering students with dashboards to track their reading speed and focus improvements over time.</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="text-align: center; margin-top: 100px;" data-aos="fade-up">Our Core Principles</h2>
+    <div class="card-grid">
+        <div class="feature-card" style="text-align: center; padding: 30px;" data-aos="zoom-in">
+            <i class="fas fa-brain" style="font-size: 3rem; color: var(--primary-indigo); margin-bottom: 20px;"></i>
+            <h3>Cognitive Ease</h3>
+            <p>Eliminating the "decoding" stress that causes mental fatigue during reading.</p>
+        </div>
+        <div class="feature-card" style="text-align: center; padding: 30px;" data-aos="zoom-in" data-aos-delay="100">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary-indigo); margin-bottom: 20px;"></i>
+            <h3>Privacy First</h3>
+            <p>Your data stays with you. We prioritize student security and total anonymity.</p>
+        </div>
+        <div class="feature-card" style="text-align: center; padding: 30px;" data-aos="zoom-in" data-aos-delay="200">
+            <i class="fas fa-globe" style="font-size: 3rem; color: var(--primary-indigo); margin-bottom: 20px;"></i>
+            <h3>Global Access</h3>
+            <p>Universal design that works across languages, regions, and all continents.</p>
+        </div>
+    </div>
 </div>
 
 <section class="footer-cta" data-aos="fade-up">
-    <h2 style="margin-bottom: 0.3rem; color: var(--primary);">Join the Revolution</h2>
-    <p style="margin-bottom: 2rem; opacity: 0.7; font-weight: 400;">Experience a web that finally speaks your language.</p>
-    <a href="{{ url_for('register') }}" class="btn-glow" style="padding: 20px 60px; font-size: 1.1rem;">Get Started Now</a>
+    <h2 style="margin-bottom: 10px;">Join the Revolution</h2>
+    <p style="margin-bottom: 30px; opacity: 0.7;">Experience a web that finally speaks your language.</p>
+    <a href="/register" class="btn-glow" style="padding: 15px 50px; font-size: 1.1rem;">Get Started Now</a>
 </section>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-    AOS.init({ duration: 800, once: true, easing: 'ease-out-quad' });
+    AOS.init({ duration: 1000, once: true });
 
     function toggleTheme() {
         document.body.classList.toggle('theme-dark');
         const icon = document.querySelector('#themeToggle i');
+        const text = document.querySelector('#themeToggle');
         if(document.body.classList.contains('theme-dark')) {
             icon.classList.replace('fa-moon', 'fa-sun');
+            text.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
         } else {
             icon.classList.replace('fa-sun', 'fa-moon');
+            text.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
         }
     }
 
