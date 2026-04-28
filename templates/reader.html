@@ -1,253 +1,175 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<style>
+    .reader-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 40px;
+        padding: 40px 0;
+    }
+
+    .glass-panel {
+        background: var(--glass);
+        backdrop-filter: blur(40px);
+        border-radius: 40px;
+        padding: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.04);
+        position: relative;
+    }
+
+    .label-accent {
+        display: inline-block;
+        padding: 6px 15px;
+        background: var(--primary-indigo);
+        color: white;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+    textarea {
+        background: rgba(255, 255, 255, 0.5);
+        border: 2px solid transparent;
+        border-radius: 25px;
+        padding: 25px;
+        font-size: 1.1rem;
+        min-height: 350px;
+        width: 100%;
+        transition: 0.4s;
+        margin-bottom: 30px;
+        font-weight: 500;
+    }
+    textarea:focus { background: white; border-color: var(--primary-indigo); outline: none; box-shadow: 0 15px 40px rgba(67, 56, 202, 0.08); }
+
+    .option-pill-box {
+        display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px;
+    }
+    .check-pill {
+        background: rgba(255, 255, 255, 0.4);
+        padding: 12px 20px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+    .check-pill:hover { background: white; transform: scale(1.02); }
+    input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-indigo); }
+
+    .output-canvas {
+        background: white;
+        border-radius: 30px;
+        padding: 40px;
+        min-height: 500px;
+        font-size: 1.4rem;
+        line-height: 2;
+        box-shadow: inset 0 5px 20px rgba(0,0,0,0.02);
+        color: #1e1b4b;
+    }
+    body.dark .output-canvas { background: #1e293b; color: #f8fafc; }
+
+    @media (max-width: 1100px) { .reader-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
 {% block content %}
-    <h1>⭐ Accessible Reader Platform</h1>
-    <h2>Making Reading Fun and Easy</h2>
-
-    <div class="container">
-        <!-- Input & Options Panel -->
-        <div class="panel">
-            <div class="form-group">
-                <label for="sourceText">Paste Your Text Here:</label>
-                <textarea id="sourceText" placeholder="Paste an article, story, or text you want to read..."></textarea>
-            </div>
-
-            <label>⚙️ Customization Options:</label>
-            <div class="options-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="opt-normalize" checked>
-                    Normalize & Format Text
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="opt-simplify">
-                    Simplify Words (Synonyms)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="opt-syllables">
-                    Break Syllables (e.g. read-ing)
-                </label>
-            </div>
+<div class="container">
+    <div class="reader-grid">
+        <!-- LEFT: INPUT -->
+        <div class="glass-panel" data-aos="fade-right">
+            <span class="label-accent">Neural Input</span>
+            <h2 class="fw-bold mb-4" style="letter-spacing: -1px;">Transform Your Reading.</h2>
             
-            <label style="margin-top: 15px;">🔍 Highlight Confusing Words:</label>
-            <div class="legend">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="hl-homophones" value="homophones" checked>
-                    <span class="color-box" style="background:#FFF59D"></span> Homophones (their/there)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="hl-visually" value="visually_similar" checked>
-                    <span class="color-box" style="background:#B2DFDB"></span> Visually Similar (was/saw)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="hl-misread" value="misread" checked>
-                    <span class="color-box" style="background:#F8BBD0"></span> Misread Pairs (quiet/quit)
-                </label>
+            <textarea id="sourceText" placeholder="Drop your text here..."></textarea>
+
+            <div class="option-pill-box">
+                <label class="check-pill"><input type="checkbox" id="opt-normalize" checked> Formatter</label>
+                <label class="check-pill"><input type="checkbox" id="opt-simplify"> AI Simplified</label>
+                <label class="check-pill"><input type="checkbox" id="opt-syllables"> Syllables</label>
+                <label class="check-pill"><input type="checkbox" id="hl-homophones" checked> Homophones</label>
+                <label class="check-pill"><input type="checkbox" id="hl-visually" checked> Visuals</label>
+                <label class="check-pill"><input type="checkbox" id="hl-misread" checked> Pairs</label>
             </div>
 
-            <div class="btn-group">
-                <button class="btn btn-secondary" onclick="clearText()"><i class="fas fa-trash"></i> Clear</button>
-                <button class="btn btn-primary" onclick="convertText()" id="convertBtn"><i class="fas fa-magic"></i> Convert Text</button>
+            <div style="display: grid; grid-template-columns: 1fr 4fr; gap: 15px;">
+                <button class="btn-glow" style="background: #fb7185;" onclick="clearText()"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn-glow" id="convertBtn" onclick="convertText()">INITIALIZE ENGINE <i class="fas fa-bolt ms-2"></i></button>
             </div>
         </div>
 
-        <!-- Output Panel -->
-        <div class="panel">
-            <label>📖 Dyslexia-Friendly Output:</label>
-            <div id="outputArea" class="output-area"></div>
+        <!-- RIGHT: OUTPUT -->
+        <div class="glass-panel" data-aos="fade-left">
+            <span class="label-accent" style="background: #10b981;">Optimized View</span>
+            <h2 class="fw-bold mb-4" style="letter-spacing: -1px;">Read Effortlessly.</h2>
             
-            <button class="btn btn-audio" id="listenBtn" onclick="readAloud()" disabled>
-                <i class="fas fa-volume-up"></i> Listen Aloud (Speech TTS)
+            <div id="outputArea" class="output-canvas"></div>
+
+            <button class="btn-glow w-100 mt-4" id="listenBtn" onclick="readAloud()" disabled style="background: #6366f1; border-radius: 20px; padding: 20px;">
+                <i class="fas fa-play-circle me-2"></i> ACTIVATE AUDIO SYNC
             </button>
         </div>
     </div>
+</div>
 
-    <!-- JavaScript integration -->
-    <script>
-        let currentUtterance = null;
+<script>
+    let startTime;
+    async function convertText() {
+        const rawText = document.getElementById('sourceText').value;
+        if (!rawText.trim()) return;
+        const btn = document.getElementById('convertBtn');
+        const outputArea = document.getElementById('outputArea');
+        btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> Processing...';
+        
+        const highlights = [];
+        if(document.getElementById('hl-homophones').checked) highlights.push('homophones');
+        if(document.getElementById('hl-visually').checked) highlights.push('visually_similar');
+        if(document.getElementById('hl-misread').checked) highlights.push('misread');
 
-        async function convertText() {
-            const rawText = document.getElementById('sourceText').value;
-            if (!rawText.trim()) {
-                alert("Please paste some text first!");
-                return;
-            }
+        const payload = {
+            text: rawText,
+            simplify: document.getElementById('opt-simplify').checked,
+            syllables: document.getElementById('opt-syllables').checked,
+            normalize: document.getElementById('opt-normalize').checked,
+            highlights: highlights
+        };
 
-            const btn = document.getElementById('convertBtn');
-            const outputArea = document.getElementById('outputArea');
-            
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
-            btn.disabled = true;
-            outputArea.classList.add('loading');
+        try {
+            const response = await fetch('/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            outputArea.innerHTML = data.processed_html;
+            document.getElementById('listenBtn').disabled = false;
+            startTime = new Date();
+        } catch (err) { alert('Engine Error'); }
+        finally { btn.innerHTML = 'INITIALIZE ENGINE <i class="fas fa-bolt ms-2"></i>'; }
+    }
 
-            // Collect active highlights
-            const highlights = [];
-            if(document.getElementById('hl-homophones').checked) highlights.push('homophones');
-            if(document.getElementById('hl-visually').checked) highlights.push('visually_similar');
-            if(document.getElementById('hl-misread').checked) highlights.push('misread');
+    function clearText() {
+        document.getElementById('sourceText').value = '';
+        document.getElementById('outputArea').innerHTML = '';
+        document.getElementById('listenBtn').disabled = true;
+        window.speechSynthesis.cancel();
+    }
 
-            const payload = {
-                text: rawText,
-                simplify: document.getElementById('opt-simplify').checked,
-                syllables: document.getElementById('opt-syllables').checked,
-                normalize: document.getElementById('opt-normalize').checked,
-                highlights: highlights
-            };
-
-            try {
-                const response = await fetch('/process', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-                
-                if(response.ok) {
-                    outputArea.innerHTML = data.processed_html;
-                    document.getElementById('listenBtn').disabled = false;
-                } else {
-                    alert('Error: ' + data.error);
-                }
-            } catch (err) {
-                alert('Connection error. Is the server running?');
-                console.error(err);
-            } finally {
-                btn.innerHTML = '<i class="fas fa-magic"></i> Convert Text';
-                btn.disabled = false;
-                outputArea.classList.remove('loading');
-                startAnalyticsTimer(); // NEW: Start timing
-            }
-        }
-
-        let startTime;
-        function startAnalyticsTimer() { startTime = new Date(); }
-
-        async function stopAndSaveAnalytics() {
-            if (!startTime) return;
-            const duration = Math.round((new Date() - startTime) / 1000);
-            const text = document.getElementById('sourceText').value.trim();
-            const words = text ? text.split(/\s+/).length : 0;
-
-            if (duration < 3) return; // Ignore very short sessions
-
-            try {
-                await fetch('/api/log_analytics', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ duration: duration, words: words })
-                });
-            } catch (err) { console.error('Analytics log failed', err); }
-            startTime = null;
-        }
-
-        function clearText() {
-            stopAndSaveAnalytics(); // NEW: Save data before clearing
-            document.getElementById('sourceText').value = '';
-            document.getElementById('outputArea').innerHTML = '';
-            document.getElementById('listenBtn').disabled = true;
-            window.speechSynthesis.cancel();
-        }
-
-        async function readAloud() {
-            // Stop any ongoing speech
-            window.speechSynthesis.cancel();
-
-            // Fetch latest preferences for speed and pitch
-            let ttsSpeed = 0.85;
-            let ttsPitch = 1.0;
-            try {
-                const response = await fetch('/api/user_preferences');
-                if (response.ok) {
-                    const prefs = await response.json();
-                    ttsSpeed = prefs.tts_speed || 0.85;
-                    ttsPitch = prefs.tts_pitch || 1.0;
-                }
-            } catch (err) { console.error("Could not fetch TTS prefs", err); }
-
-            // Get clean text strictly from innerText to bypass HTML tags 
-            const textToRead = document.getElementById('outputArea').innerText;
-            if (!textToRead.trim()) return;
-
-            currentUtterance = new SpeechSynthesisUtterance(textToRead);
-            
-            // Apply personalized settings
-            currentUtterance.rate = ttsSpeed; 
-            currentUtterance.pitch = ttsPitch;
-            currentUtterance.lang = 'en-US';
-
-            // Find a good voice (preferably clearer/female, but depends on OS)
-            const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(v => v.name.includes("Google") || v.name.includes("Zira") || v.name.includes("Samantha"));
-            if (preferredVoice) {
-                currentUtterance.voice = preferredVoice;
-            }
-
-            const listenBtn = document.getElementById('listenBtn');
-            listenBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Listening';
-            listenBtn.classList.replace('btn-audio', 'btn-secondary');
-            
-            currentUtterance.onend = function() {
-                resetListenButton();
-            };
-
-            currentUtterance.onerror = function() {
-                resetListenButton();
-            };
-
-            // Switch button logic to stop if already playing
-            listenBtn.onclick = function() {
-                window.speechSynthesis.cancel();
-                resetListenButton();
-            };
-
-            // Word synchronization highlighting
-            currentUtterance.onboundary = function(event) {
-                if (event.name === 'word') {
-                    const text = event.utterance.text;
-                    const word = text.substring(event.charIndex, event.charIndex + event.charLength);
-                    
-                    // Simple approach: we highlight all occurrences of the word being spoken
-                    // since tracking exact index with HTML injected is highly complex.
-                    // A better approach would be wrapping all words in IDs beforehand.
-                    // For the MVP, we just remove the current active word class and add it to the matching span.
-                    
-                    // Not a perfect word sync due to HTML breaks, but close.
-                }
-            };
-            
-            // To do proper word sync, we need outputArea text wrapped in word spans.
-            // Let's implement a workaround here:
-            // Find all word-like strings and wrap them if they aren't already wrapped (excluding HTML tags).
-            // Actually, we'll keep it simple for MVP: just apply a global CSS flash or try to match words.
-            // For now, let's just log or visually indicate speech is ongoing.
-
-            window.speechSynthesis.speak(currentUtterance);
-        }
-
-        // Fetch User Preferences and apply to UI
-        async function fetchPreferences() {
-            try {
-                const response = await fetch('/api/user_preferences');
-                if (response.ok) {
-                    const prefs = await response.json();
-                    
-                    // Force apply the full class string to body
-                    document.body.className = `${prefs.theme} font-${prefs.font_size} spacing-${prefs.line_spacing}`;
-                    console.log("UI Preferences Applied:", prefs);
-                }
-            } catch (err) {
-                console.error("Failed to fetch preferences", err);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', fetchPreferences);
-
-
-        function resetListenButton() {
-            const listenBtn = document.getElementById('listenBtn');
-            listenBtn.innerHTML = '<i class="fas fa-volume-up"></i> Listen Aloud (Speech TTS)';
-            listenBtn.classList.replace('btn-secondary', 'btn-audio');
-            listenBtn.onclick = readAloud;
-        }
-    </script>
+    async function readAloud() {
+        window.speechSynthesis.cancel();
+        const response = await fetch('/api/user_preferences');
+        const prefs = await response.json();
+        const utterance = new SpeechSynthesisUtterance(document.getElementById('outputArea').innerText);
+        utterance.rate = prefs.tts_speed || 0.85;
+        utterance.pitch = prefs.tts_pitch || 1.0;
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
 {% endblock %}

@@ -98,6 +98,18 @@
         .spacing-normal { line-height: 1.6; }
         .spacing-relaxed { line-height: 2.0; letter-spacing: 0.05em; }
         .spacing-loose { line-height: 2.5; letter-spacing: 0.1em; }
+
+        /* HIGHLIGHT CLASSES */
+        .highlight {
+            padding: 2px 4px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.3s;
+            cursor: help;
+        }
+        .hl-homophones { background-color: var(--hl-homophone); border-bottom: 2px solid #eab308; color: #854d0e; }
+        .hl-visually_similar { background-color: var(--hl-visually); border-bottom: 2px solid #0d9488; color: #134e4a; }
+        .hl-misread { background-color: var(--hl-misread); border-bottom: 2px solid #db2777; color: #831843; }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
