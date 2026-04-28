@@ -1,61 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroLearn | Join the Future</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #050505;
-            --accent-cyan: #00F2FF;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body {
-            background: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%);
-            height: 100vh; display: flex; justify-content: center; align-items: center; color: white;
-        }
-        .gateway-card {
-            background: var(--glass); backdrop-filter: blur(25px);
-            padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05);
-            width: 450px; text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-        }
-        h2 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, #fff, var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p { opacity: 0.5; margin-bottom: 30px; }
-        
-        input {
-            width: 100%; padding: 18px; margin: 10px 0; border-radius: 15px;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: white; font-size: 1rem; outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(0,242,255,0.2); }
-        
-        .btn-submit {
-            width: 100%; padding: 18px; margin-top: 20px; border-radius: 50px;
-            background: white; color: black; font-weight: 800; border: none;
-            cursor: pointer; transition: 0.4s; font-size: 1rem;
-        }
-        .btn-submit:hover { background: var(--accent-cyan); transform: scale(1.02); }
-        
-        .footer-link { margin-top: 25px; font-size: 0.9rem; opacity: 0.6; }
-        .footer-link a { color: var(--accent-cyan); text-decoration: none; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="gateway-card">
-        <h2>Join NeuroLearn</h2>
-        <p>Start your journey toward boundless reading.</p>
-        
-        <form action="{{ url_for('register') }}" method="POST">
-            <input type="text" name="username" placeholder="Choose a Username" required>
-            <input type="password" name="password" placeholder="Create a Password" required>
-            <button type="submit" class="btn-submit">INITIALIZE ACCOUNT</button>
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+    .auth-container {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+    }
+    .auth-card {
+        background: var(--glass);
+        backdrop-filter: blur(35px);
+        padding: 70px; /* High padding for cleanliness */
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 50px 120px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 600px; /* Larger max width */
+        position: relative;
+    }
+    .auth-card h2 {
+        font-size: 3.2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: var(--primary-indigo);
+        letter-spacing: -2px;
+    }
+    .subtitle { font-size: 1.1rem; opacity: 0.6; margin-bottom: 50px; display: block; font-weight: 600; }
+
+    .form-group { margin-bottom: 30px; }
+    .form-label { font-size: 0.8rem; font-weight: 800; text-uppercase: uppercase; letter-spacing: 1.5px; color: var(--primary-indigo); margin-bottom: 12px; display: block; }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 22px;
+        padding: 18px 28px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        width: 100%;
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .form-control:focus {
+        background: white;
+        border-color: var(--primary-indigo);
+        box-shadow: 0 15px 40px rgba(67, 56, 202, 0.12);
+        outline: none;
+        transform: scale(1.02);
+    }
+    .btn-glow { border-radius: 22px; font-size: 1.2rem; letter-spacing: 1px; font-weight: 800; padding: 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card" data-aos="fade-up">
+        <div class="text-center">
+            <h2>Join Us.</h2>
+            <span class="subtitle">Start your personalized learning experience today.</span>
+        </div>
+
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Choose Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Unique identifier" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Create Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-glow w-100 mt-3">
+                CREATE MY ACCOUNT <i class="fas fa-sparkles ms-2"></i>
+            </button>
         </form>
-        
-        <div class="footer-link">
-            Already have an identity? <a href="{{ url_for('login') }}">Login Here</a>
+
+        <div class="text-center mt-5">
+            <p class="small fw-bold opacity-60">Already have an account? <a href="{{ url_for('login') }}" class="text-primary text-decoration-none">Login here</a></p>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

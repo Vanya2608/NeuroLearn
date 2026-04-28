@@ -1,207 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroLearn | Beyond Reading</title>
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+    /* INDEX SPECIFIC STYLES */
+    .hero {
+        height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        text-align: center; padding: 0 20px; position: relative;
+    }
+    .hero h1 {
+        font-size: clamp(3rem, 10vw, 6rem); font-weight: 800; line-height: 0.9; margin-bottom: 25px;
+        background: linear-gradient(to bottom, var(--primary-indigo), #6366f1);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: 1.3rem; max-width: 700px; opacity: 0.7; margin-bottom: 40px; }
+
+    .feature-showcase { padding: 50px 0; max-width: 1300px; margin: 0 auto; position: relative; }
+    .feature-row { display: flex; align-items: center; gap: 80px; margin-bottom: 150px; }
+    .feature-row:nth-child(even) { flex-direction: row-reverse; }
+    .feature-content { flex: 1; }
+    .feature-content h2 { font-size: 3rem; font-weight: 800; margin-bottom: 25px; color: var(--primary-indigo); }
+    .feature-content p { font-size: 1.1rem; opacity: 0.7; line-height: 1.8; margin-bottom: 30px; }
     
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    .feature-image {
+        flex: 1.2; position: relative; border-radius: 40px; overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.08); border: 8px solid var(--nav-bg);
+    }
+    .feature-image img { width: 100%; display: block; }
 
-    <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #fce7f3 0%, #e0f2fe 100%);
-            --primary-indigo: #4338ca; 
-            --text-main: #1e1b4b; 
-            --accent-pink: #fbcfe8;
-            --accent-blue: #bae6fd;
-            --glass: rgba(255, 255, 255, 0.4);
-            --nav-bg: rgba(255, 255, 255, 0.3);
-        }
+    .info-card {
+        position: absolute; bottom: 20px; left: 20px; background: var(--nav-bg); backdrop-filter: blur(10px);
+        padding: 15px 25px; border-radius: 20px; border-left: 5px solid var(--accent-blue);
+    }
 
-        /* DARK MODE VARIABLES */
-        body.theme-dark {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            --text-main: #f1f5f9;
-            --primary-indigo: #818cf8;
-            --glass: rgba(15, 23, 42, 0.6);
-            --nav-bg: rgba(15, 23, 42, 0.8);
-        }
+    /* ABSTRACT ANIMATED ELEMENTS */
+    .abstract-blob {
+        position: absolute;
+        width: 500px; height: 500px;
+        background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
+        filter: blur(80px);
+        border-radius: 50%;
+        opacity: 0.3;
+        z-index: -1;
+        animation: floatBlob 20s infinite alternate ease-in-out;
+    }
+    .blob-1 { top: -100px; right: -100px; background: var(--accent-pink); }
+    .blob-2 { bottom: -150px; left: -150px; background: var(--accent-blue); animation-duration: 25s; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+    @keyframes floatBlob {
+        0% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
 
-        body {
-            margin: 0; padding: 0; min-height: 100vh;
-            color: var(--text-main);
-            background: var(--bg-gradient);
-            transition: all 0.4s ease;
-            overflow-x: hidden;
-            position: relative;
-        }
+    @media (max-width: 900px) {
+        .feature-row { flex-direction: column !important; gap: 40px; }
+        .hero h1 { font-size: 3.5rem; }
+    }
+</style>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+{% endblock %}
 
-        /* FEATHER BACKGROUND LOGIC */
-        body::before {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=1600');
-            background-size: cover; background-position: center;
-            opacity: 0.15; z-index: -1; pointer-events: none;
-        }
+{% block content %}
+<div class="hero">
+    <div class="abstract-blob blob-1"></div>
+    <div class="abstract-blob blob-2"></div>
+    
+    <h1 data-aos="fade-up">READ WITHOUT <br> BOUNDARIES.</h1>
+    <p data-aos="fade-up" data-aos-delay="200">The world's first neural adaptation engine that redefines how the dyslexic mind processes information.</p>
+    <div data-aos="fade-up" data-aos-delay="400">
+        <a href="{{ url_for('reader') }}" class="btn-glow" style="padding: 20px 60px; font-size: 1.2rem;">INITIALIZE INTERFACE</a>
+    </div>
+</div>
 
-        /* --- CENTERED NAVIGATION (GRID SYSTEM) --- */
-        nav {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            padding: 20px 50px; 
-            display: grid;
-            grid-template-columns: 1fr auto 1fr; 
-            align-items: center;
-            background: var(--nav-bg); backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            transition: background 0.4s ease;
-        }
-        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; color: var(--primary-indigo); text-decoration: none; justify-self: start; }
-        
-        .nav-links { display: flex; gap: 30px; align-items: center; justify-self: center; }
-        .nav-links a, .theme-btn { 
-            text-decoration: none; 
-            color: var(--text-main); 
-            opacity: 0.7;
-            font-weight: 600; 
-            transition: 0.3s; 
-            font-size: 0.95rem; 
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .nav-links a:hover, .theme-btn:hover { opacity: 1; color: var(--primary-indigo); }
-        
-        .nav-right { justify-self: end; display: flex; gap: 15px; align-items: center; }
-
-        .btn-glow {
-            padding: 10px 25px; border-radius: 50px; background: var(--primary-indigo);
-            color: white !important; font-weight: 700; text-decoration: none;
-            transition: 0.4s; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.15);
-            border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-        }
-        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(67, 56, 202, 0.25); }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 0 20px; position: relative;
-        }
-        .hero h1 {
-            font-size: 6rem; font-weight: 800; line-height: 0.9; margin-bottom: 25px;
-            background: linear-gradient(to bottom, var(--primary-indigo), #6366f1);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .hero p { font-size: 1.3rem; max-width: 700px; opacity: 0.7; margin-bottom: 40px; }
-
-        .feature-showcase { padding: 100px 50px; max-width: 1300px; margin: 0 auto; position: relative; }
-        .feature-row { display: flex; align-items: center; gap: 80px; margin-bottom: 150px; }
-        .feature-row:nth-child(even) { flex-direction: row-reverse; }
-        .feature-content { flex: 1; }
-        .feature-content h2 { font-size: 3.5rem; font-weight: 800; margin-bottom: 25px; color: var(--primary-indigo); }
-        .feature-content p { font-size: 1.2rem; opacity: 0.7; line-height: 1.8; margin-bottom: 30px; }
-        
-        .feature-image {
-            flex: 1.2; position: relative; border-radius: 40px; overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.08); border: 8px solid var(--nav-bg);
-        }
-        .feature-image img { width: 100%; display: block; }
-
-        .info-card {
-            position: absolute; bottom: 20px; left: 20px; background: var(--nav-bg); backdrop-filter: blur(10px);
-            padding: 15px 25px; border-radius: 20px; border-left: 5px solid var(--accent-blue);
-        }
-
-        footer { padding: 60px 50px; text-align: center; background: var(--nav-bg); backdrop-filter: blur(10px); color: var(--text-main); opacity: 0.5; font-weight: 600; border-top: 1px solid rgba(255,255,255,0.05); }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <a href="{{ url_for('index') }}" class="logo">NEUROLEARN</a>
-
-        <div class="nav-links">
-            <a href="{{ url_for('index') }}">Vision</a>
-            <a href="{{ url_for('about') }}">About</a>
-            <a href="{{ url_for('reader') }}">Interface</a>
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
-            {% endif %}
-            <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">
-                <i class="fas fa-moon"></i> Dark Mode
-            </button>
+<div class="feature-showcase">
+    <div class="feature-row" data-aos="fade-up">
+        <div class="feature-content">
+            <h2>Magic Focus. <br> Zero Distraction.</h2>
+            <p>We believe reading should feel like a superpower. Our AI creates a custom visual path for your eyes, keeping every word grounded.</p>
+            <a href="{{ url_for('about') }}" class="btn-glow" style="background: transparent; color: var(--primary-indigo) !important; border: 2px solid var(--primary-indigo);">LEARN OUR VISION</a>
         </div>
-
-        <div class="nav-right">
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('profile') }}" class="btn-glow" style="background: white; color: #4338ca !important; border: 1px solid #4338ca;">
-                    <i class="fas fa-user-cog"></i> SETTINGS
-                </a>
-                <a href="{{ url_for('logout') }}" class="btn-glow">LOGOUT</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="btn-glow">LOGIN</a>
-            {% endif %}
-        </div>
-    </nav>
-
-    <div class="hero">
-        <h1 data-aos="fade-up">READ WITHOUT <br> BOUNDARIES.</h1>
-        <p data-aos="fade-up" data-aos-delay="200">The world's first neural adaptation engine that redefines how the dyslexic mind processes information.</p>
-        <div data-aos="fade-up" data-aos-delay="400">
-            <a href="{{ url_for('reader') }}" class="btn-glow" style="padding: 20px 60px; font-size: 1.2rem;">INITIALIZE INTERFACE</a>
+        <div class="feature-image">
+            <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80" alt="Focus Mode">
+            <div class="info-card"><h4>STABILIZATION 2.0</h4></div>
         </div>
     </div>
 
-    <div class="feature-showcase">
-        <div class="feature-row" data-aos="fade-up">
-            <div class="feature-content">
-                <h2>Magic Focus. <br> Zero Distraction.</h2>
-                <p>We believe reading should feel like a superpower. Our AI creates a custom visual path for your eyes, keeping every word grounded.</p>
-            </div>
-            <div class="feature-image">
-                <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80" alt="Focus Mode">
-                <div class="info-card"><h4>STABILIZATION 2.0</h4></div>
-            </div>
+    <div class="feature-row" data-aos="fade-up">
+        <div class="feature-content">
+            <h2>Hear Every Word, <br> Master Every Page.</h2>
+            <p>Engage your auditory senses to lock in comprehension. Our human-like AI voice synchronizes perfectly with the text.</p>
+            <a href="{{ url_for('reader') }}" class="btn-glow" style="display: inline-flex;">EXPLORE AUDIO MODE</a>
         </div>
-
-        <div class="feature-row" data-aos="fade-up">
-            <div class="feature-content">
-                <h2>Hear Every Word, <br> Master Every Page.</h2>
-                <p>Engage your auditory senses to lock in comprehension. Our human-like AI voice synchronizes perfectly with the text.</p>
-                <a href="{{ url_for('reader') }}" class="btn-glow" style="display: inline-block; margin-top: 20px;">EXPLORE AUDIO MODE</a>
-            </div>
-            <div class="feature-image">
-                <img src="https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&w=1200&q=80" alt="Audio Learning">
-                <div class="info-card" style="border-left-color: var(--accent-pink);"><h4>SONIC SYNC</h4></div>
-            </div>
+        <div class="feature-image">
+            <img src="https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&w=1200&q=80" alt="Audio Learning">
+            <div class="info-card" style="border-left-color: var(--accent-pink);"><h4>SONIC SYNC</h4></div>
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <footer>
-        NEUROLEARN © 2026 | THE FUTURE IS ACCESSIBLE
-    </footer>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 1500, once: true });
-
-        function toggleTheme() {
-            document.body.classList.toggle('theme-dark');
-            const icon = document.querySelector('#themeToggle i');
-            const text = document.querySelector('#themeToggle');
-            
-            if(document.body.classList.contains('theme-dark')) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-                text.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-                text.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
-            }
-        }
-    </script>
-</body>
-</html>
+{% block extra_scripts %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1500, once: true });
+</script>
+{% endblock %}

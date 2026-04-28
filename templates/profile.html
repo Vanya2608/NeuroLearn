@@ -1,233 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroLearn Profile | Account & Preferences</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+{% extends "base.html" %}
 
-    <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #fce7f3 0%, #e0f2fe 100%);
-            --primary-indigo: #4338ca; 
-            --text-main: #1e1b4b; 
-            --glass-card: rgba(255, 255, 255, 0.6);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-
-        body {
-            margin: 0; padding: 0; min-height: 100vh;
-            color: var(--text-main);
-            background: var(--bg-gradient);
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=1600');
-            background-size: cover; background-position: center;
-            opacity: 0.15; z-index: -1; pointer-events: none;
-        }
-
-        /* --- NAVIGATION --- */
-        nav {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            padding: 20px 50px; 
-            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
-            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.5);
-        }
-        .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary-indigo); text-decoration: none; justify-self: start; }
-        .nav-links { display: flex; gap: 35px; align-items: center; justify-self: center; }
-        .nav-links a { text-decoration: none; color: rgba(30, 27, 75, 0.7); font-weight: 600; transition: 0.3s; font-size: 0.95rem; }
-        .nav-right { justify-self: end; display: flex; gap: 15px; }
-
-        .btn-glow {
-            padding: 10px 25px; border-radius: 50px; background: var(--primary-indigo);
-            color: white !important; font-weight: 700; text-decoration: none;
-            transition: 0.4s; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.15);
-            border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-        }
-
-        /* --- LAYOUT --- */
-        .container { max-width: 1100px; margin: 120px auto 50px; padding: 0 20px; display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
+{% block content %}
+<div class="container" style="display: flex; justify-content: center;">
+    <div class="panel" style="width: 100%; max-width: 600px;">
+        <h2>Reading Preferences</h2>
+        <p style="text-align: center; margin-bottom: 20px;">Adjust settings to make reading easier for you.</p>
         
-        .profile-sidebar {
-            background: var(--glass-card); backdrop-filter: blur(15px);
-            border-radius: 30px; padding: 40px 25px; border: 1px solid white;
-            text-align: center; height: fit-content; display: flex; flex-direction: column; align-items: center;
-        }
-        .avatar-circle {
-            width: 100px; height: 100px; background: #bae6fd;
-            border-radius: 50%; margin-bottom: 20px; display: flex;
-            align-items: center; justify-content: center; font-size: 2.5rem;
-            color: var(--primary-indigo); border: 4px solid white;
-        }
-
-        /* --- THE FIX: ACCOUNT DETAILS STYLING --- */
-        .settings-panel {
-            background: var(--glass-card); backdrop-filter: blur(15px);
-            border-radius: 30px; padding: 40px; border: 1px solid white;
-        }
-
-        .info-row {
-            padding: 18px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column; /* Stack vertically to prevent overlap */
-            gap: 8px;
-        }
-        .info-row label { 
-            font-weight: 800; 
-            opacity: 0.4; 
-            font-size: 0.75rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px; 
-        }
-        .info-row span { 
-            font-weight: 700; 
-            color: var(--primary-indigo); 
-            font-size: 1.1rem;
-            word-break: break-all; /* Ensures long emails wrap naturally */
-        }
-
-        /* --- PREFERENCES --- */
-        .pref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
-        .pref-group { margin-bottom: 25px; }
-        .pref-group label { display: block; margin-bottom: 12px; font-weight: 700; opacity: 0.8; font-size: 0.9rem; }
-
-        select, input[type="range"] {
-            width: 100%; padding: 12px; border-radius: 12px; border: 2px solid white;
-            background: rgba(255,255,255,0.5); outline: none; color: var(--text-main); font-weight: 600;
-        }
-
-        .theme-toggle-group { display: flex; gap: 15px; }
-        .theme-btn {
-            flex: 1; padding: 12px; border-radius: 12px; border: 2px solid white;
-            background: rgba(255,255,255,0.4); cursor: pointer; font-weight: 700;
-            transition: 0.3s; text-align: center; font-size: 0.85rem;
-        }
-        .theme-btn.active { border-color: var(--primary-indigo); background: white; color: var(--primary-indigo); }
-
-        footer { grid-column: 1 / -1; padding: 40px; text-align: center; opacity: 0.4; font-weight: 600; }
-    </style>
-</head>
-<body>
-
-<nav>
-    <a href="{{ url_for('index') }}" class="logo">NEUROLEARN</a>
-    <div class="nav-links">
-        <a href="{{ url_for('index') }}">Vision</a>
-        <a href="{{ url_for('about') }}">About</a>
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-    </div>
-    <div class="nav-right">
-        <a href="{{ url_for('reader') }}" class="btn-glow">INTERFACE</a>
-        <a href="{{ url_for('logout') }}" class="btn-glow" style="background: white; color: var(--primary-indigo) !important; border: 1px solid var(--primary-indigo);">LOGOUT</a>
-    </div>
-</nav>
-
-<div class="container">
-    <aside class="profile-sidebar" data-aos="fade-right">
-        <div class="avatar-circle">
-            <i class="fas fa-user-graduate"></i>
-        </div>
-        <h2 style="color: var(--primary-indigo); font-weight: 800;">{{ current_user.username }}</h2>
-        <div style="background: rgba(255,255,255,0.3); padding: 12px; border-radius: 15px; margin-top: 15px; width: 100%;">
-            <p style="font-weight: 700; font-size: 0.85rem; color: var(--primary-indigo); word-break: break-all;">{{ current_user.email }}</p>
-        </div>
-        <p style="margin-top: 25px; font-size: 0.75rem; font-weight: 800; opacity: 0.4; text-transform: uppercase;">Student Pro Account</p>
-    </aside>
-
-    <main class="settings-panel" data-aos="fade-left">
-        <h2 style="color: var(--primary-indigo); margin-bottom: 25px;"><i class="fas fa-id-card"></i> Account Details</h2>
-        
-        <div class="info-row">
-            <label>Username</label>
-            <span>{{ current_user.username }}</span>
-        </div>
-        
-        <div class="info-row">
-            <label>Email Address</label>
-            <span>{{ current_user.email }}</span>
-        </div>
-        
-        <div class="info-row" style="border-bottom: none;">
-            <label>Member Since</label>
-            <span>April 2026</span>
-        </div>
-
-        <hr style="margin: 30px 0; opacity: 0.1;">
-
-        <h2 style="color: var(--primary-indigo); margin-bottom: 25px;"><i class="fas fa-sliders-h"></i> Reading Preferences</h2>
-        
-        <form id="preferencesForm">
-            <div class="pref-grid">
-                <div class="opt-section">
-                    <div class="pref-group">
-                        <label>Interface Theme</label>
-                        <div class="theme-toggle-group">
-                            <div class="theme-btn active" onclick="setTheme(this, 'light')"><i class="fas fa-sun"></i> Light</div>
-                            <div class="theme-btn" onclick="setTheme(this, 'dark')"><i class="fas fa-moon"></i> Dark</div>
-                        </div>
-                    </div>
-                    <div class="pref-group">
-                        <label>Font Size</label>
-                        <select>
-                            <option selected>Medium (18px)</option>
-                            <option>Large (20px)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="opt-section">
-                    <div class="pref-group">
-                        <label>Reading Speed</label>
-                        <input type="range" min="1" max="3" step="1" value="2">
-                    </div>
-                    <div class="pref-group">
-                        <label>Voice Pitch</label>
-                        <input type="range" min="1" max="100" value="50">
-                    </div>
-                </div>
+        <form method="POST" action="{{ url_for('profile') }}">
+            <div class="form-group">
+                <label for="theme">Color Theme</label>
+                <select name="theme" id="theme" style="width: 100%; padding: 10px; border-radius: 5px;">
+                    <option value="light" {% if profile.theme == 'light' %}selected{% endif %}>Default (Light Cream)</option>
+                    <option value="dark" {% if profile.theme == 'dark' %}selected{% endif %}>Dark Mode</option>
+                    <option value="sepia" {% if profile.theme == 'sepia' %}selected{% endif %}>Sepia</option>
+                    <option value="high-contrast" {% if profile.theme == 'high-contrast' %}selected{% endif %}>High Contrast</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="font_size">Font Size</label>
+                <select name="font_size" id="font_size" style="width: 100%; padding: 10px; border-radius: 5px;">
+                    <option value="small" {% if profile.font_size == 'small' %}selected{% endif %}>Small</option>
+                    <option value="medium" {% if profile.font_size == 'medium' %}selected{% endif %}>Medium (Default)</option>
+                    <option value="large" {% if profile.font_size == 'large' %}selected{% endif %}>Large</option>
+                </select>
             </div>
 
-            <div style="margin-top: 40px; text-align: right;">
-                <button type="button" class="btn-glow" id="applyBtn" onclick="handleApply()">
-                    APPLY PREFERENCES
-                </button>
+            <div class="form-group">
+                <label for="line_spacing">Spacing & Layout</label>
+                <select name="line_spacing" id="line_spacing" style="width: 100%; padding: 10px; border-radius: 5px;">
+                    <option value="normal" {% if profile.line_spacing == 'normal' %}selected{% endif %}>Normal</option>
+                    <option value="relaxed" {% if profile.line_spacing == 'relaxed' %}selected{% endif %}>Relaxed</option>
+                    <option value="loose" {% if profile.line_spacing == 'loose' %}selected{% endif %}>Loose (Very Spaced)</option>
+                </select>
             </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Reading Speed (TTS): <span id="speedVal">{{ profile.tts_speed }}</span></label>
+                <input type="range" name="tts_speed" min="0.5" max="1.5" step="0.1" value="{{ profile.tts_speed }}" class="form-range" style="width: 100%;" oninput="document.getElementById('speedVal').innerText=this.value">
+            </div>
+
+            <div class="form-group">
+                <label>Voice Pitch: <span id="pitchVal">{{ profile.tts_pitch }}</span></label>
+                <input type="range" name="tts_pitch" min="0.5" max="1.5" step="0.1" value="{{ profile.tts_pitch }}" class="form-range" style="width: 100%;" oninput="document.getElementById('pitchVal').innerText=this.value">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Save Preferences</button>
         </form>
-    </main>
+    </div>
 </div>
-
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-    AOS.init({ duration: 1000, once: true });
-
-    function setTheme(btn, mode) {
-        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function handleApply() {
-        const btn = document.getElementById('applyBtn');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNCING...';
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-check"></i> APPLIED';
-            btn.style.background = '#059669'; 
-            setTimeout(() => {
-                btn.innerHTML = 'APPLY PREFERENCES';
-                btn.style.background = ''; 
-            }, 3000);
-        }, 1200);
-    }
-</script>
-</body>
-</html>
+{% endblock %}

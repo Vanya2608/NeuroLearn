@@ -150,7 +150,9 @@ def get_preferences():
         'theme': 'light',
         'font_size': 'medium', 
         'line_spacing': 'normal',
-        'highlight_active': True
+        'highlight_active': True,
+        'tts_speed': 0.85,
+        'tts_pitch': 1.0
     })
 
 @app.route('/process', methods=['POST'])
@@ -185,6 +187,18 @@ def process():
         'original': text,
         'processed_html': processed_html
     })
+
+@app.route('/api/log_analytics', methods=['POST'])
+@login_required
+def log_analytics():
+    data = request.get_json()
+    latest = ReadingHistory.query.filter_by(user_id=current_user.id).order_by(ReadingHistory.date_processed.desc()).first()
+    if latest:
+        latest.duration_seconds = data.get('duration', 0)
+        latest.word_count = data.get('words', 0)
+        db.session.commit()
+        return jsonify({'status': 'success'})
+    return jsonify({'error': 'No session found'}), 404
 
 @app.route('/dashboard')
 @login_required
