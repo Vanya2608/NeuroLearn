@@ -1,24 +1,135 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 800px; margin: 40px auto; background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);">
-    <h1>About Neuro_Learn</h1>
-    <h2 style="margin-bottom: 20px;">Our Mission</h2>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<style>
+    /* Premium Styling for About Page */
+    .about-container { max-width: 1100px; margin: 60px auto; padding: 0 20px; color: var(--text-main); }
     
-    <p style="font-size: 1.2rem; margin-bottom: 20px; text-align: left;">
-        Reading can be challenging for children and adults with dyslexia. That's why we built Neuro_Learn—a platform specifically engineered to adjust how text is presented, so that reading becomes a joyful experience rather than a difficult struggle.
-    </p>
+    .hero-section { text-align: center; margin-bottom: 80px; padding: 40px; }
+    .hero-section h1 { font-size: 3.5rem; font-weight: 800; color: var(--primary-indigo); margin-bottom: 20px; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 80px; }
+    .img-styled { 
+        width: 100%; border-radius: 30px; border: 8px solid white; 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1); transition: 0.4s ease;
+    }
+    .img-styled:hover { transform: scale(1.02) rotate(1deg); }
 
-    <h3 style="margin-bottom: 10px; text-align: left; width: 100%;">Key Features:</h3>
-    <ul style="text-align: left; width: 100%; font-size: 1.1rem; padding-left: 20px;">
-        <li style="margin-bottom: 5px;"><strong>Customization:</strong> Dyslexia-friendly fonts, spacing adjustments, and color themes.</li>
-        <li style="margin-bottom: 5px;"><strong>Simplification:</strong> Synonym replacement for complex English words.</li>
-        <li style="margin-bottom: 5px;"><strong>Focus:</strong> Color-coded highlighting for visually similar and easily confused words.</li>
-        <li style="margin-bottom: 5px;"><strong>Audio Support:</strong> Text-to-speech functionality to follow along aloud.</li>
-    </ul>
+    /* Unified Card Grid for both Scope and Principles */
+    .card-grid { 
+        display: grid; 
+        grid-template-columns: repeat(3, 1fr); /* Forces exactly 3 columns in one line */
+        gap: 25px; 
+        margin-top: 40px; 
+    }
     
-    <div style="margin-top: 40px;">
-        <a href="{{ url_for('reader') }}" class="btn btn-primary" style="text-decoration: none;">Experience the Tool</a>
+    .feature-card {
+        background: var(--glass-card); backdrop-filter: blur(15px);
+        border-radius: 25px; padding: 30px; text-align: center;
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .feature-card:hover { transform: translateY(-10px); background: white; }
+    
+    .icon-box { font-size: 2.5rem; color: var(--primary-indigo); margin-bottom: 15px; }
+    
+    @media (max-width: 992px) { .card-grid { grid-template-columns: 1fr; } } /* Stack on mobile */
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; text-align: center; } }
+</style>
+
+<div class="about-container">
+    <!-- HERO -->
+    <header class="hero-section" data-aos="fade-down">
+        <h1>About NeuroLearn</h1>
+        <p style="font-size: 1.3rem; opacity: 0.8; max-width: 700px; margin: 0 auto;">
+            Redefining the digital landscape to empower neurodivergent minds globally.
+        </p>
+    </header>
+
+    <!-- SECTION 1: INVISIBLE BARRIER -->
+    <div class="grid-2">
+        <div data-aos="fade-right">
+            <h2 style="color: var(--primary-indigo); font-size: 2.5rem; margin-bottom: 20px;">The Invisible Barrier</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                Traditional education platforms are often designed for the neurotypical majority. For the 1 in 5 people with dyslexia, the digital world can feel like sensory noise. 
+                <strong>NeuroLearn</strong> was built to dismantle these barriers, allowing natural intelligence to shine without the struggle of visual decoding.
+            </p>
+        </div>
+        <div data-aos="fade-left">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" class="img-styled" alt="Accessibility Concept">
+        </div>
+    </div>
+
+    <!-- SECTION 2: COMMUNITY DRIVEN -->
+    <div class="grid-2" style="direction: rtl;">
+        <div data-aos="fade-left" style="direction: ltr;">
+            <h2 style="color: var(--primary-indigo); font-size: 2.5rem; margin-bottom: 20px;">Community Driven</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                We build <strong>with</strong> you, not just for you. Our roadmap is defined by the neurodivergent community. 
+                Every feature—from specific font weights to syllable breaking—is tested and refined by students and educators who see the world differently.
+            </p>
+        </div>
+        <div data-aos="fade-right">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800" class="img-styled" alt="Community Support">
+        </div>
+    </div>
+
+    <!-- SECTION 3: SCOPE & FUTURE (Single Line) -->
+    <section style="margin-bottom: 100px;" data-aos="fade-up">
+        <h2 style="text-align: center; color: var(--primary-indigo); font-size: 2.5rem;">Scope & Future</h2>
+        <div class="card-grid">
+            <div class="feature-card" style="border-bottom: 5px solid #bae6fd;">
+                <div class="icon-box"><i class="fas fa-brain"></i></div>
+                <h3>AI Adapting</h3>
+                <p style="font-size: 0.95rem;">Simplifying technical jargon into ADHD-friendly summaries.</p>
+            </div>
+            <div class="feature-card" style="border-bottom: 5px solid #fbcfe8;">
+                <div class="icon-box"><i class="fas fa-mobile-alt"></i></div>
+                <h3>Mobile Ecosystem</h3>
+                <p style="font-size: 0.95rem;">Scanning textbooks via our upcoming mobile camera app.</p>
+            </div>
+            <div class="feature-card" style="border-bottom: 5px solid #bbf7d0;">
+                <div class="icon-box"><i class="fas fa-chart-line"></i></div>
+                <h3>Progress Analytics</h3>
+                <p style="font-size: 0.95rem;">Dashboards to track reading speed and focus improvements.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: CORE PRINCIPLES (Single Line) -->
+    <section style="margin-bottom: 80px;" data-aos="fade-up">
+        <h2 style="text-align: center; color: var(--primary-indigo); font-size: 2.5rem; margin-bottom: 40px;">Our Core Principles</h2>
+        <div class="card-grid">
+            <div class="feature-card" style="border-bottom: 5px solid #db2777;">
+                <div class="icon-box"><i class="fas fa-feather"></i></div>
+                <h3>Cognitive Ease</h3>
+                <p style="font-size: 0.95rem;">Eliminating the "decoding" stress that causes mental fatigue.</p>
+            </div>
+            <div class="feature-card" style="border-bottom: 5px solid #0284c7;">
+                <div class="icon-box"><i class="fas fa-lock"></i></div>
+                <h3>Privacy First</h3>
+                <p style="font-size: 0.95rem;">Your neural preferences stay with you. Security above all.</p>
+            </div>
+            <div class="feature-card" style="border-bottom: 5px solid #16a34a;">
+                <div class="icon-box"><i class="fas fa-universal-access"></i></div>
+                <h3>Universal Access</h3>
+                <p style="font-size: 0.95rem;">Reading tools should be free for every student, everywhere.</p>
+            </div>
+        </div>
+    </section>
+
+    <div style="text-align: center; margin-top: 80px;" data-aos="fade-up">
+        <a href="{{ url_for('reader') }}" class="btn-glow" style="padding: 20px 60px; font-size: 1.2rem; text-decoration: none; display: inline-block;">Experience the Future</a>
     </div>
 </div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+</script>
 {% endblock %}
