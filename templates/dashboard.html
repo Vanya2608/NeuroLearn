@@ -2,6 +2,39 @@
 
 {% block extra_head %}
 <style>
+    /* THEME VARIABLES: Pastel Blue & Pink Feather */
+    :root {
+        --primary-indigo: #6366f1;
+        --accent-pink: #fce7f3;
+        --accent-blue: #e0f2fe;
+        --glass: rgba(255, 255, 255, 0.45);
+        --text-dark: #1e1b4b;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        /* Fixed pastel gradient background */
+        background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-blue) 100%) !important;
+        position: relative;
+        color: var(--text-dark);
+    }
+
+    /* Feather Overlay Layer */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        /* Using a soft, abstract feather/ink texture */
+        background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=1600');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.2; /* Subtle feather texture */
+        z-index: -1;
+        pointer-events: none;
+    }
+
     .dashboard-hero {
         padding: 60px 0;
         text-align: center;
@@ -12,6 +45,7 @@
         color: var(--primary-indigo);
         margin-bottom: 10px;
         letter-spacing: -1.5px;
+        text-shadow: 0 10px 20px rgba(0,0,0,0.02);
     }
     
     .stats-row {
@@ -26,28 +60,34 @@
         backdrop-filter: blur(25px);
         padding: 40px;
         border-radius: 35px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.6);
         text-align: center;
         transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.03);
     }
-    .stat-card:hover { transform: translateY(-10px); border-color: var(--primary-indigo); }
+    .stat-card:hover { 
+        transform: translateY(-10px); 
+        border-color: var(--primary-indigo); 
+        background: rgba(255, 255, 255, 0.7);
+    }
     .stat-card i { font-size: 3rem; color: var(--primary-indigo); margin-bottom: 20px; opacity: 0.8; }
-    .stat-card h2 { font-size: 2.8rem; font-weight: 800; margin-bottom: 5px; }
-    .stat-card p { font-weight: 700; opacity: 0.5; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+    .stat-card h2 { font-size: 2.8rem; font-weight: 800; margin-bottom: 5px; color: var(--primary-indigo); }
+    .stat-card p { font-weight: 700; opacity: 0.6; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; color: var(--text-dark); }
 
     .history-section {
         background: var(--glass);
         backdrop-filter: blur(25px);
         border-radius: 40px;
         padding: 50px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.5);
         margin-bottom: 100px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.04);
     }
     .history-section h3 { font-size: 2rem; font-weight: 800; margin-bottom: 30px; color: var(--primary-indigo); }
 
-    .table { margin-bottom: 0; }
-    .table thead th { border: none; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.4; padding: 20px; }
-    .table td { padding: 25px 20px; border-bottom: 1px solid rgba(0,0,0,0.03); font-weight: 600; font-size: 1.05rem; }
+    .table { margin-bottom: 0; color: var(--text-dark); }
+    .table thead th { border: none; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.5; padding: 20px; color: var(--text-dark); }
+    .table td { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 1.05rem; }
     
     .wpm-badge {
         background: var(--primary-indigo);
@@ -57,7 +97,7 @@
         font-size: 0.9rem;
         box-shadow: 0 10px 20px rgba(67, 56, 202, 0.2);
     }
-    .text-preview { max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.6; font-style: italic; }
+    .text-preview { max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.7; font-style: italic; }
 
     @media (max-width: 768px) {
         .history-section { padding: 30px; }
@@ -71,7 +111,7 @@
     <!-- Header -->
     <div class="dashboard-hero" data-aos="fade-down">
         <h1>Welcome Back, {{ current_user.username }}</h1>
-        <p class="lead opacity-75 fw-bold">Your neural adaptation stats are looking great today.</p>
+        <p class="lead fw-bold" style="opacity: 0.8;">Your neural adaptation stats are looking great today.</p>
     </div>
 
     <!-- Stats Grid -->
@@ -124,7 +164,7 @@
                 <tbody>
                     {% for entry in history %}
                     <tr>
-                        <td style="font-size: 0.9rem; opacity: 0.5;">{{ entry.date_processed.strftime('%b %d, %H:%M') }}</td>
+                        <td style="font-size: 0.9rem; opacity: 0.6;">{{ entry.date_processed.strftime('%b %d, %H:%M') }}</td>
                         <td><div class="text-preview">{{ entry.original_text }}</div></td>
                         <td>
                             {% if entry.duration_seconds > 0 %}
@@ -141,7 +181,7 @@
             {% if not history %}
             <div class="text-center py-5">
                 <p class="opacity-50">No activity logged yet. Start reading to see your stats grow!</p>
-                <a href="{{ url_for('reader') }}" class="btn-glow mt-3" style="display: inline-block;">GOTO READER</a>
+                <a href="{{ url_for('reader') }}" class="btn-glow mt-3" style="display: inline-block; padding: 15px 35px; text-decoration: none;">GOTO READER</a>
             </div>
             {% endif %}
         </div>

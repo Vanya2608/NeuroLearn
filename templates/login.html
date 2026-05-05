@@ -2,40 +2,75 @@
 
 {% block extra_head %}
 <style>
+    /* PASTEL FEATHER THEME CONFIGURATION */
+    :root {
+        --primary-indigo: #6366f1;
+        --accent-pink: #fce7f3;
+        --accent-blue: #e0f2fe;
+        --glass: rgba(255, 255, 255, 0.45);
+        --text-main: #1e1b4b;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        /* Fixed pastel gradient background */
+        background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-blue) 100%) !important;
+        position: relative;
+        color: var(--text-main);
+    }
+
+    /* Feather Overlay Layer */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        /* Abstract feather/cloud texture */
+        background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=1600');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.2; /* Soft texture consistent with other pages */
+        z-index: -1;
+        pointer-events: none;
+    }
+
     .auth-container {
         min-height: 85vh;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 40px 20px;
+        position: relative;
     }
+
     .auth-card {
         background: var(--glass);
         backdrop-filter: blur(30px);
-        padding: 60px; /* Increased padding */
+        padding: 60px;
         border-radius: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.04);
         width: 100%;
-        max-width: 550px; /* Increased card size */
+        max-width: 550px;
         transition: transform 0.3s ease;
     }
     .auth-card:hover { transform: translateY(-5px); }
 
     .auth-card h2 {
-        font-size: 3rem; /* Larger heading */
+        font-size: 3rem;
         font-weight: 800;
         margin-bottom: 15px;
         color: var(--primary-indigo);
         letter-spacing: -1.5px;
     }
-    .text-muted { font-size: 1.1rem; margin-bottom: 40px; opacity: 0.6; }
+    .text-muted { font-size: 1.1rem; margin-bottom: 40px; opacity: 0.7; color: var(--text-main) !important; }
 
     .form-label { margin-bottom: 10px; display: block; font-size: 0.85rem; letter-spacing: 1px; color: var(--primary-indigo); }
     
     .form-control {
-        background: rgba(255, 255, 255, 0.7);
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.8);
         border-radius: 20px;
         padding: 16px 25px;
         font-size: 1.1rem;
@@ -43,6 +78,7 @@
         margin-bottom: 25px;
         width: 100%;
         transition: 0.4s;
+        color: var(--text-main);
     }
     .form-control:focus {
         background: white;
@@ -50,10 +86,32 @@
         box-shadow: 0 15px 30px rgba(67, 56, 202, 0.1);
         outline: none;
     }
+
+    /* Floating Animated Blobs */
+    .bg-blob {
+        position: fixed;
+        width: 500px; height: 500px;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.25;
+        z-index: -1;
+        animation: floatMove 20s infinite alternate;
+    }
+    .blob-1 { top: -10%; right: -10%; background: #fdf2f8; }
+    .blob-2 { bottom: -10%; left: -10%; background: #f0f9ff; animation-delay: -5s; }
+
+    @keyframes floatMove {
+        from { transform: translate(0, 0); }
+        to { transform: translate(50px, 100px); }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- Background Depth Blobs -->
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+
 <div class="auth-container">
     <div class="auth-card" data-aos="zoom-in">
         <div class="text-center">
@@ -70,13 +128,13 @@
                 <label class="form-label fw-bold text-uppercase">Password</label>
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required>
             </div>
-            <button type="submit" class="btn-glow w-100 py-3" style="font-size: 1.2rem; border-radius: 20px;">
+            <button type="submit" class="btn-glow w-100 py-3" style="font-size: 1.2rem; border-radius: 20px; background: var(--primary-indigo); border: none; color: white; cursor: pointer;">
                 ENTER WORKSPACE <i class="fas fa-sign-in-alt ms-2"></i>
             </button>
         </form>
 
         <div class="text-center mt-5">
-            <p class="small fw-bold opacity-75">New to the platform? <a href="{{ url_for('register') }}" class="text-primary text-decoration-none">Create an account</a></p>
+            <p class="small fw-bold opacity-75">New to the platform? <a href="{{ url_for('register') }}" class="text-primary text-decoration-none" style="color: var(--primary-indigo) !important;">Create an account</a></p>
         </div>
     </div>
 </div>

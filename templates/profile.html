@@ -2,15 +2,49 @@
 
 {% block extra_head %}
 <style>
-    .profile-container { padding: 60px 20px; display: flex; justify-content: center; }
+    /* PASTEL FEATHER THEME CONFIGURATION */
+    :root {
+        --primary-indigo: #6366f1;
+        --accent-pink: #fce7f3;
+        --accent-blue: #e0f2fe;
+        --glass: rgba(255, 255, 255, 0.45);
+        --text-dark: #1e1b4b;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        /* Fixed pastel gradient background */
+        background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-blue) 100%) !important;
+        position: relative;
+        color: var(--text-dark);
+        transition: background 0.4s ease;
+    }
+
+    /* Feather Overlay Layer */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        /* Abstract feather/ink texture consistent with other pages */
+        background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=1600');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.2; 
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .profile-container { padding: 60px 20px; display: flex; justify-content: center; position: relative; }
     
     .settings-card {
         background: var(--glass);
         backdrop-filter: blur(40px);
         border-radius: 50px;
         padding: 60px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.04);
         width: 100%;
         max-width: 800px;
     }
@@ -25,12 +59,13 @@
     .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 50px; }
 
     .setting-item { margin-bottom: 25px; }
-    .setting-item label { display: block; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; opacity: 0.7; }
+    .setting-item label { display: block; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; opacity: 0.7; color: var(--text-dark); }
     
     select, input[type="range"] {
         width: 100%; padding: 15px 20px; border-radius: 15px;
-        border: 1px solid rgba(0,0,0,0.05); background: rgba(255,255,255,0.6);
+        border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.6);
         font-weight: 600; font-family: inherit; transition: 0.3s;
+        color: var(--text-dark);
     }
     select:focus { outline: none; border-color: var(--primary-indigo); background: white; }
 
@@ -40,17 +75,48 @@
 
     .save-btn {
         width: 100%; padding: 20px; border-radius: 25px; font-size: 1.2rem;
-        font-weight: 800; letter-spacing: 1px;
+        font-weight: 800; letter-spacing: 1px; color: white; border: none;
+        background: var(--primary-indigo);
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        cursor: pointer; transition: 0.3s;
+    }
+    .save-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3); }
+
+    /* Floating Blobs for Extra Depth */
+    .bg-blob {
+        position: fixed;
+        width: 500px; height: 500px;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.25;
+        z-index: -1;
+        animation: floatMove 20s infinite alternate;
+    }
+    .blob-1 { top: -10%; right: -10%; background: #fdf2f8; }
+    .blob-2 { bottom: -10%; left: -10%; background: #f0f9ff; animation-delay: -5s; }
+
+    @keyframes floatMove {
+        from { transform: translate(0, 0); }
+        to { transform: translate(50px, 100px); }
+    }
+
+    @media (max-width: 768px) {
+        .settings-grid { grid-template-columns: 1fr; gap: 20px; }
+        .settings-card { padding: 40px 25px; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- Background Depth Blobs -->
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+
 <div class="profile-container">
     <div class="settings-card" data-aos="zoom-in">
         <div class="text-center mb-5">
-            <h1 class="fw-bold" style="font-size: 3rem; letter-spacing: -2px;">Personalization</h1>
-            <p class="opacity-60 fw-bold">Tailor the neural engine to your unique cognitive style.</p>
+            <h1 class="fw-bold" style="font-size: 3rem; letter-spacing: -2px; color: var(--primary-indigo);">Personalization</h1>
+            <p class="fw-bold" style="opacity: 0.7;">Tailor the neural engine to your unique cognitive style.</p>
         </div>
 
         <form method="POST">
@@ -103,7 +169,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-glow save-btn">
+            <button type="submit" class="save-btn">
                 SAVE PREFERENCES <i class="fas fa-save ms-2"></i>
             </button>
         </form>

@@ -2,6 +2,38 @@
 
 {% block extra_head %}
 <style>
+    /* THEME VARIABLES: Pastel Blue & Pink Feather */
+    :root {
+        --primary-indigo: #6366f1;
+        --accent-pink: #fce7f3;
+        --accent-blue: #e0f2fe;
+        --glass: rgba(255, 255, 255, 0.45);
+        --text-main: #1e1b4b;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        /* Attractive Pastel Gradient */
+        background: linear-gradient(135deg, #fce7f3 0%, #e0f2fe 100%) !important;
+        position: relative;
+        color: var(--text-main);
+    }
+
+    /* Feather Overlay Layer */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=1600');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.2; /* Subtle feather texture */
+        z-index: -1;
+        pointer-events: none;
+    }
+
     .reader-grid {
         display: grid;
         grid-template-columns: 1fr 1.2fr;
@@ -11,11 +43,11 @@
 
     .glass-panel {
         background: var(--glass);
-        backdrop-filter: blur(40px);
+        backdrop-filter: blur(25px); /* Premium Glass Blur */
         border-radius: 40px;
         padding: 50px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.03);
         position: relative;
     }
 
@@ -34,7 +66,7 @@
 
     textarea {
         background: rgba(255, 255, 255, 0.5);
-        border: 2px solid transparent;
+        border: 2px solid rgba(255, 255, 255, 0.8);
         border-radius: 25px;
         padding: 25px;
         font-size: 1.1rem;
@@ -43,14 +75,20 @@
         transition: 0.4s;
         margin-bottom: 30px;
         font-weight: 500;
+        color: var(--text-main);
     }
-    textarea:focus { background: white; border-color: var(--primary-indigo); outline: none; box-shadow: 0 15px 40px rgba(67, 56, 202, 0.08); }
+    textarea:focus { 
+        background: white; 
+        border-color: var(--primary-indigo); 
+        outline: none; 
+        box-shadow: 0 15px 40px rgba(67, 56, 202, 0.1); 
+    }
 
     .option-pill-box {
         display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px;
     }
     .check-pill {
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.6);
         padding: 12px 20px;
         border-radius: 15px;
         display: flex;
@@ -59,13 +97,13 @@
         cursor: pointer;
         font-weight: 600;
         transition: 0.3s;
-        border: 1px solid rgba(0,0,0,0.03);
+        border: 1px solid rgba(255, 255, 255, 0.8);
     }
     .check-pill:hover { background: white; transform: scale(1.02); }
     input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-indigo); }
 
     .output-canvas {
-        background: white;
+        background: rgba(255, 255, 255, 0.85); /* Slightly opaque for high-contrast highlighting */
         border-radius: 30px;
         padding: 40px;
         min-height: 500px;
@@ -74,7 +112,9 @@
         box-shadow: inset 0 5px 20px rgba(0,0,0,0.02);
         color: #1e1b4b;
     }
-    body.dark .output-canvas { background: #1e293b; color: #f8fafc; }
+    
+    /* Preserve highlight system colors regardless of theme */
+    .output-canvas strong { color: var(--primary-indigo); }
 
     @media (max-width: 1100px) { .reader-grid { grid-template-columns: 1fr; } }
 </style>
@@ -120,6 +160,7 @@
 </div>
 
 <script>
+    /* Logic untouched as requested */
     let startTime;
     async function convertText() {
         const rawText = document.getElementById('sourceText').value;
